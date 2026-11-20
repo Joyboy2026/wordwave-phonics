@@ -1,0 +1,73 @@
+{
+  "app": "WORDWAVE 单词声波站",
+  "version": "2026-11-20-pwa",
+  "description": "五年级自然拼读 + WORD LAB 学单词，手机端纯静态站点",
+  "entrypoint": "index.html",
+  "server": {
+    "cwd": ".",
+    "command": "python3 -m http.server ${PORT} --bind 0.0.0.0",
+    "defaultPort": 8765,
+    "alternativeCommand": "py -3 -m http.server ${PORT} --bind 0.0.0.0",
+    "requires": [
+      "python3"
+    ],
+    "build": "none"
+  },
+  "counts": {
+    "phonicsGroups": 42,
+    "phonicsWords": 840,
+    "textbookWords": 44,
+    "labWords": 80,
+    "labTextbookWords": 44,
+    "labExtensionWords": 36,
+    "wordAudioFiles": 840,
+    "sentenceAudioFiles": 80,
+    "uiAudioFiles": 10
+  },
+  "checks": [
+    "test -f index.html",
+    "test -f data.js",
+    "test -f lab.js",
+    "test -f manifest.json",
+    "test -f sw.js",
+    "find audio/words -type f | wc -l  # 840",
+    "find audio/lab/sentences -type f | wc -l  # 80",
+    "curl -fsS http://127.0.0.1:8765/ >/dev/null",
+    "curl -fsS http://127.0.0.1:8765/manifest.json >/dev/null",
+    "curl -fsS http://127.0.0.1:8765/audio/words/unhappy.mp3 -o /dev/null",
+    "curl -fsS http://127.0.0.1:8765/audio/lab/sentences/unhappy.mp3 -o /dev/null"
+  ],
+  "storageKeys": [
+    "wordwave.progress.v1",
+    "wordwave.wordlab.v1"
+  ],
+  "doNotModify": [
+    "data.js",
+    "lab.js",
+    "audio/",
+    "index.html"
+  ],
+  "doNotCopy": [
+    ".oil-ui/",
+    "work/",
+    "shots/",
+    "reviews/",
+    "node_modules/"
+  ],
+  "notes": [
+    "纯静态站点，无后端、无数据库、无 npm 构建",
+    "手机需与服务器同一 Wi-Fi，用局域网 IP 访问",
+    "不要占用或替换 DSH Web GUI 端口",
+    "qr-lan.png 是旧机器地址，换机后请重新生成",
+    "没有登录保护，不要直接暴露到公网",
+    "PWA 安装需要 HTTPS；局域网 HTTP 只能浏览"
+  ],
+  "pwa": {
+    "manifest": "manifest.json",
+    "serviceWorker": "sw.js",
+    "offlineShell": true,
+    "runtimeAudioCache": true,
+    "installRequiresHttps": true,
+    "icons": "icons/"
+  }
+}
