@@ -69,5 +69,6 @@
     "runtimeAudioCache": true,
     "installRequiresHttps": true,
     "icons": "icons/"
-  }
+  },
+  "liveUrl": "https://joyboy2026.github.io/wordwave-phonics/"
 }

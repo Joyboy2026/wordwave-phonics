@@ -1,3 +1,7 @@
+> 在线版：<https://joyboy2026.github.io/wordwave-phonics/>
+>
+> 手机安装：Android Chrome 菜单 → “安装应用”；iPhone Safari → 分享 → “添加到主屏幕”。
+
 # WORDWAVE 单词声波站
 
 给五年级孩子的手机端自然拼读练习页。42 个频道、840 个词，按前缀 / 后缀 / 字母组合分组，每组 20 词、每 5 词一批；含外研社五上/五下核心词和拓展词。
