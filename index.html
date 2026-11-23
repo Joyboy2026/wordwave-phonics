@@ -3151,6 +3151,7 @@ body.no-scroll { overflow: hidden; }
   body.is-zoomed .star-stat .star { font-size: 13px; }
   body.is-zoomed .subbar-center { display: none; }
   body.is-zoomed .subbar-inner { min-height: 52px; gap: 8px; }
+  body.is-zoomed .lab-count-chip { margin-left: auto; }
   body.is-zoomed .back-btn { min-height: 36px; padding: 0 9px; font-size: 11px; }
   body.is-zoomed .eyebrow { gap: 6px; font-size: 9px; letter-spacing: 0.1em; }
   body.is-zoomed .hero h1 { font-size: clamp(40px, 12.5vw, 56px); }
@@ -3380,7 +3381,7 @@ body.no-scroll { overflow: hidden; }
   <section class="view" id="view-words" hidden>
     <header class="subbar lab-subbar">
       <div class="subbar-inner">
-        <button class="back-btn" type="button" data-action="lab-home">← <span>首页</span></button>
+        <button class="back-btn" type="button" id="lab-back" data-action="lab-home" aria-label="返回首页">← <span id="lab-back-label">首页</span></button>
         <div class="subbar-center"><span class="sub-chip"><i></i><span>WORD LAB · 学单词</span></span></div>
         <span class="lab-count-chip" id="lab-count-chip">0 / 80</span>
       </div>
@@ -5070,7 +5071,17 @@ body.no-scroll { overflow: hidden; }
     labState.attempts = 0;
   }
 
+  function setLabBackMode(isStudy) {
+    const back = $("#lab-back");
+    if (!back) return;
+    const isStudyNow = Boolean(isStudy);
+    const label = $("#lab-back-label");
+    if (label) label.textContent = isStudyNow ? "单词" : "首页";
+    back.setAttribute("aria-label", isStudyNow ? "返回单词列表" : "返回首页");
+  }
+
   function openLabHome() {
+    setLabBackMode(false);
     setView("words");
     state.groupId = null;
     state.quiz = null;
@@ -5087,6 +5098,7 @@ body.no-scroll { overflow: hidden; }
       go("#/words");
       return;
     }
+    setLabBackMode(true);
     setView("words");
     renderLabStudy();
     scrollTop();
@@ -5677,7 +5689,8 @@ body.no-scroll { overflow: hidden; }
     }
     if (action === "lab-home") {
       stopAudio();
-      go("#/");
+      if (location.hash === "#/words/study") go("#/words");
+      else go("#/");
       return;
     }
     if (action === "lab-map" || action === "lab-win-map") {
