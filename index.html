@@ -3122,6 +3122,141 @@ body.no-scroll { overflow: hidden; }
   .lab-word-large { font-size: 40px; }
 }
 
+/* ---------- page zoom ---------- */
+
+/* The app is the only layer that scales, so dialogs and toasts keep a stable
+   size. `zoom` reflows the layout instead of clipping a transformed canvas. */
+#app {
+  zoom: 1;
+  touch-action: pan-y;
+}
+
+/* Keep the tab strip horizontally scrollable while pinch zoom is reserved for
+   the page. */
+.tabs { touch-action: pan-x pan-y; }
+
+/* At 130%+ the narrow layout would run out of room; trim the decorative
+   parts. Media queries still read the unzoomed viewport, so this only kicks
+   in on phones, never on a wide desktop window. */
+@media (max-width: 700px) {
+  body.is-zoomed .brand-text small,
+  body.is-zoomed .onair { display: none; }
+
+  body.is-zoomed .brand { gap: 8px; }
+  body.is-zoomed .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+  body.is-zoomed .brand-mark svg { width: 21px; height: 21px; }
+  body.is-zoomed .brand-text strong { font-size: 15px; }
+  body.is-zoomed .topbar-inner { min-height: 58px; }
+  body.is-zoomed .star-stat { min-height: 32px; padding: 0 8px; font-size: 11px; }
+  body.is-zoomed .star-stat .star { font-size: 13px; }
+  body.is-zoomed .subbar-center { display: none; }
+  body.is-zoomed .subbar-inner { min-height: 52px; gap: 8px; }
+  body.is-zoomed .back-btn { min-height: 36px; padding: 0 9px; font-size: 11px; }
+  body.is-zoomed .eyebrow { gap: 6px; font-size: 9px; letter-spacing: 0.1em; }
+  body.is-zoomed .hero h1 { font-size: clamp(40px, 12.5vw, 56px); }
+  body.is-zoomed .lab-title { font-size: 36px; }
+  body.is-zoomed .lab-banner { grid-template-columns: 52px minmax(0, 1fr); gap: 10px 12px; padding: 13px; }
+  body.is-zoomed .lab-stamp { width: 52px; height: 52px; border-radius: 12px; font-size: 14px; }
+  body.is-zoomed .lab-banner-copy strong { font-size: 22px; }
+  body.is-zoomed .lab-banner-cta { grid-column: 1 / -1; justify-content: center; min-height: 40px; white-space: normal; }
+}
+
+/* Zoom controls live outside #app so they stay legible at every zoom level. */
+.zoom-hud {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index: 85;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 3px 3px 0 var(--coral);
+  transform: translateX(-50%);
+  animation: zoomHudIn 180ms ease both;
+}
+
+.zoom-hud[hidden] { display: none; }
+
+.zoom-hud button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.zoom-hud button:hover { background: rgba(255, 253, 247, 0.16); }
+.zoom-hud button:active { transform: scale(0.94); }
+.zoom-hud button:disabled { opacity: 0.35; }
+.zoom-hud .zoom-reset { min-width: 60px; font-size: 12px; letter-spacing: 0.04em; }
+
+.zoom-fab {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  z-index: 84;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-height: 66px;
+  padding: 9px 0;
+  border: 2px solid var(--ink);
+  border-right: 0;
+  border-radius: 10px 0 0 10px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: -3px 3px 0 rgba(23, 23, 27, 0.18);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%);
+  animation: zoomFabIn 220ms ease both;
+}
+
+.zoom-fab[hidden] { display: none; }
+.zoom-fab:active { translate: 1px 0; }
+
+@keyframes zoomHudIn {
+  from { opacity: 0; transform: translate(-50%, 10px) scale(0.94); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes zoomFabIn {
+  from { opacity: 0; transform: translate(10px, -50%); }
+  to { opacity: 1; transform: translate(0, -50%); }
+}
+
+.modal-tip {
+  margin: 0 0 14px;
+  padding: 9px 11px;
+  border: 1.5px dashed rgba(23, 23, 27, 0.28);
+  border-left: 5px solid var(--coral);
+  border-radius: 10px;
+  background: var(--soft);
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+.modal-tip strong { color: var(--ink); }
+
 </style>
 </head>
 <body>
@@ -3282,6 +3417,13 @@ body.no-scroll { overflow: hidden; }
   </section>
 </main>
 
+<div class="zoom-hud" id="zoom-hud" role="group" aria-label="页面缩放" hidden>
+  <button type="button" id="zoom-out" aria-label="缩小页面">−</button>
+  <button type="button" class="zoom-reset" id="zoom-reset" aria-label="恢复 100% 大小" title="恢复 100%"><span id="zoom-value">100%</span></button>
+  <button type="button" id="zoom-in" aria-label="放大页面">+</button>
+</div>
+<button class="zoom-fab" id="zoom-fab" type="button" aria-label="页面已放大，点按恢复 100%" hidden>150%</button>
+
 <div class="modal" id="how-modal" hidden>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="how-title">
     <button class="close-x" type="button" data-action="close-how" aria-label="关闭玩法说明">×</button>
@@ -3302,6 +3444,7 @@ body.no-scroll { overflow: hidden; }
         <div><strong>三题挑战</strong><p>每 5 个词一组，听单词选出正确拼写。四组都完成后点亮频道，还有语音和动画鼓励。</p></div>
       </li>
     </ol>
+    <p class="modal-tip"><strong>小提示</strong> 两指捏合可以缩放页面，双击页面快速放大 / 还原；放大后右侧会显示百分比，点一下即可回到 100%。</p>
     <button class="btn btn-primary" type="button" data-action="close-how-start" style="width:100%;">知道啦，去调频</button>
   </div>
 </div>
@@ -3388,6 +3531,27 @@ body.no-scroll { overflow: hidden; }
   const labWin = $("#lab-win");
   const labConfetti = $("#lab-confetti");
   const burstCanvas = $("#burst-confetti");
+  const zoomHud = $("#zoom-hud");
+  const zoomValue = $("#zoom-value");
+  const zoomOut = $("#zoom-out");
+  const zoomIn = $("#zoom-in");
+  const zoomReset = $("#zoom-reset");
+  const zoomFab = $("#zoom-fab");
+
+  const ZOOM_KEY = "wordwave.zoom.v1";
+  const MIN_ZOOM = 1;
+  const MAX_ZOOM = 1.6;
+  const ZOOM_STEP = 0.1;
+  const DOUBLE_TAP_ZOOM = 1.5;
+  const ZOOM_HUD_HIDE_MS = 3200;
+  const ZOOM_HEADER_TRIM_AT = 1.3;
+
+  let pageZoom = 1;
+  let zoomHudTimer = 0;
+  let pinchState = null;
+  let pinchFrame = 0;
+  let lastTouchTap = { at: 0, x: 0, y: 0 };
+  let suppressTapUntil = 0;
 
   let audioCtx = null;
   let playToken = 0;
@@ -3931,6 +4095,7 @@ body.no-scroll { overflow: hidden; }
     }, 80);
     startConfetti();
     playChime("win");
+    syncZoomChrome();
   }
 
   function openCelebration(group, score, wasDone) {
@@ -3992,6 +4157,7 @@ body.no-scroll { overflow: hidden; }
     celebration.hidden = true;
     app.inert = false;
     document.body.classList.remove("no-scroll");
+    syncZoomChrome();
     const groupId = state.celebrationGroup;
     state.celebrationGroup = null;
     state.celebrationMode = null;
@@ -4010,6 +4176,7 @@ body.no-scroll { overflow: hidden; }
     app.inert = true;
     state.modalOpen = true;
     document.body.classList.add("no-scroll");
+    syncZoomChrome();
     window.setTimeout(() => {
       const close = $("[data-action='close-how']", howModal);
       if (close) close.focus({ preventScroll: true });
@@ -4024,6 +4191,163 @@ body.no-scroll { overflow: hidden; }
     if (lastFocused && typeof lastFocused.focus === "function") {
       lastFocused.focus({ preventScroll: true });
       lastFocused = null;
+    }
+    syncZoomChrome();
+  }
+
+  /* ---------- page zoom ---------- */
+
+  function clampZoom(value) {
+    return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
+  }
+
+  function overlayOpen() {
+    return !howModal.hidden || !celebration.hidden || !labWin.hidden;
+  }
+
+  function syncZoomChrome() {
+    const percent = `${Math.round(pageZoom * 100)}%`;
+    zoomValue.textContent = percent;
+    zoomFab.textContent = percent;
+    zoomFab.setAttribute("aria-label", `页面已放大到 ${percent}，点按恢复 100%`);
+    zoomOut.disabled = pageZoom <= MIN_ZOOM + 0.001;
+    zoomIn.disabled = pageZoom >= MAX_ZOOM - 0.001;
+    if (pinchState) {
+      window.clearTimeout(zoomHudTimer);
+      zoomHud.hidden = true;
+      zoomFab.hidden = true;
+      return;
+    }
+    if (overlayOpen()) {
+      window.clearTimeout(zoomHudTimer);
+      zoomHud.hidden = true;
+      zoomFab.hidden = true;
+      return;
+    }
+    if (!zoomHud.hidden) {
+      zoomFab.hidden = true;
+      return;
+    }
+    zoomFab.hidden = pageZoom <= MIN_ZOOM + 0.001;
+  }
+
+  function showZoomHud() {
+    if (overlayOpen()) return;
+    window.clearTimeout(zoomHudTimer);
+    zoomHud.hidden = false;
+    zoomFab.hidden = true;
+    zoomHudTimer = window.setTimeout(() => {
+      zoomHud.hidden = true;
+      syncZoomChrome();
+    }, ZOOM_HUD_HIDE_MS);
+  }
+
+  function applyZoom(value, options = {}) {
+    pageZoom = Math.round(clampZoom(value) * 10) / 10;
+    app.style.zoom = String(pageZoom);
+    document.body.classList.toggle("is-zoomed", pageZoom >= ZOOM_HEADER_TRIM_AT);
+    if (options.persist !== false) {
+      try { window.localStorage.setItem(ZOOM_KEY, String(pageZoom)); } catch (error) {}
+    }
+    syncZoomChrome();
+    if (options.hud) showZoomHud();
+    if (options.announce) {
+      setLive(pageZoom <= MIN_ZOOM + 0.001 ? "页面已恢复原始大小" : `页面已放大到 ${Math.round(pageZoom * 100)}%`);
+    }
+  }
+
+  function changeZoom(delta, announce = true) {
+    applyZoom(pageZoom + delta, { hud: true, announce });
+  }
+
+  function resetZoom(announce = true) {
+    applyZoom(1, { hud: true, announce });
+  }
+
+  function readSavedZoom() {
+    try {
+      const saved = Number.parseFloat(window.localStorage.getItem(ZOOM_KEY));
+      if (Number.isFinite(saved)) return clampZoom(saved);
+    } catch (error) {}
+    return 1;
+  }
+
+  function touchDistance(a, b) {
+    return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  }
+
+  function onZoomTouchStart(event) {
+    if (event.touches.length !== 2) return;
+    const [a, b] = event.touches;
+    lastTouchTap = { at: 0, x: 0, y: 0 };
+    pinchState = {
+      startDistance: Math.max(1, touchDistance(a, b)),
+      startZoom: pageZoom,
+      startScroll: window.scrollY,
+      midY: (a.clientY + b.clientY) / 2,
+      latestZoom: pageZoom,
+      pendingZoom: pageZoom
+    };
+    window.clearTimeout(zoomHudTimer);
+    zoomHud.hidden = true;
+    zoomFab.hidden = true;
+    if (navigator.vibrate) {
+      try { navigator.vibrate(6); } catch (error) {}
+    }
+  }
+
+  function onZoomTouchMove(event) {
+    if (!pinchState || event.touches.length !== 2) return;
+    event.preventDefault();
+    const [a, b] = event.touches;
+    const distance = Math.max(1, touchDistance(a, b));
+    const stepped = Math.round(clampZoom(pinchState.startZoom * (distance / pinchState.startDistance)) * 10) / 10;
+    if (Math.abs(stepped - pinchState.latestZoom) < 0.05) return;
+    pinchState.latestZoom = stepped;
+    pinchState.pendingZoom = stepped;
+    if (pinchFrame) return;
+    pinchFrame = window.requestAnimationFrame(() => {
+      pinchFrame = 0;
+      if (!pinchState) return;
+      applyZoom(pinchState.pendingZoom, { persist: false });
+      const ratio = pageZoom / pinchState.startZoom;
+      window.scrollTo(0, Math.max(0, (pinchState.startScroll + pinchState.midY) * ratio - pinchState.midY));
+    });
+  }
+
+  function finishPinch() {
+    if (!pinchState) return;
+    pinchState = null;
+    if (pinchFrame) {
+      window.cancelAnimationFrame(pinchFrame);
+      pinchFrame = 0;
+    }
+    suppressTapUntil = performance.now() + 450;
+    try { window.localStorage.setItem(ZOOM_KEY, String(pageZoom)); } catch (error) {}
+    if (pageZoom > MIN_ZOOM + 0.001) showZoomHud();
+    else syncZoomChrome();
+  }
+
+  function onZoomTouchEnd(event) {
+    if (pinchState && event.touches.length < 2) {
+      finishPinch();
+      return;
+    }
+    if (event.touches.length !== 0 || performance.now() < suppressTapUntil) return;
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+    const target = touch.target instanceof Element ? touch.target : null;
+    if (target && target.closest("button, a, input, select, textarea, label, [contenteditable]")) return;
+    const now = performance.now();
+    const doubled = now - lastTouchTap.at < 340
+      && Math.hypot(touch.clientX - lastTouchTap.x, touch.clientY - lastTouchTap.y) < 32;
+    if (doubled) {
+      event.preventDefault();
+      lastTouchTap = { at: 0, x: 0, y: 0 };
+      suppressTapUntil = now + 450;
+      applyZoom(pageZoom > MIN_ZOOM + 0.05 ? 1 : DOUBLE_TAP_ZOOM, { hud: true, announce: true });
+    } else {
+      lastTouchTap = { at: now, x: touch.clientX, y: touch.clientY };
     }
   }
 
@@ -4323,7 +4647,7 @@ body.no-scroll { overflow: hidden; }
   let touchStart = null;
 
   function onCardTouchStart(event) {
-    if (event.touches.length !== 1) return;
+    if (event.touches.length !== 1) { touchStart = null; return; }
     if (event.target.closest("button")) { touchStart = null; return; }
     const touch = event.touches[0];
     touchStart = { x: touch.clientX, y: touch.clientY };
@@ -4331,6 +4655,7 @@ body.no-scroll { overflow: hidden; }
 
   function onCardTouchEnd(event) {
     if (!touchStart) return;
+    if (pinchState || performance.now() < suppressTapUntil) { touchStart = null; return; }
     const touch = event.changedTouches[0];
     const dx = touch.clientX - touchStart.x;
     const dy = touch.clientY - touchStart.y;
@@ -5203,6 +5528,7 @@ body.no-scroll { overflow: hidden; }
     labWin.hidden = false;
     app.inert = true;
     document.body.classList.add("no-scroll");
+    syncZoomChrome();
     stopBurstConfetti();
     startConfetti("#lab-confetti");
     playClip("audio/ui/cheer-base.mp3", {
@@ -5229,6 +5555,7 @@ body.no-scroll { overflow: hidden; }
     labWin.hidden = true;
     app.inert = false;
     document.body.classList.remove("no-scroll");
+    syncZoomChrome();
     if (labLastFocused && typeof labLastFocused.focus === "function") {
       labLastFocused.focus({ preventScroll: true });
       labLastFocused = null;
@@ -5507,6 +5834,41 @@ body.no-scroll { overflow: hidden; }
     if (event.target === labWin) closeLabWin();
   });
 
+  zoomOut.addEventListener("click", () => changeZoom(-ZOOM_STEP));
+  zoomIn.addEventListener("click", () => changeZoom(ZOOM_STEP));
+  zoomReset.addEventListener("click", () => resetZoom());
+  zoomFab.addEventListener("click", () => resetZoom());
+
+  app.addEventListener("touchstart", onZoomTouchStart, { passive: true });
+  app.addEventListener("touchmove", onZoomTouchMove, { passive: false });
+  app.addEventListener("touchend", onZoomTouchEnd, { passive: false });
+  app.addEventListener("touchcancel", finishPinch, { passive: true });
+
+  // Safari still reports its legacy gesture events; suppress the native page
+  // zoom inside #app so the custom pinch handler is the only one in play.
+  ["gesturestart", "gesturechange", "gestureend"].forEach(type => {
+    document.addEventListener(type, event => {
+      if (event.target instanceof Node && app.contains(event.target)) event.preventDefault();
+    }, { passive: false });
+  });
+
+  document.addEventListener("keydown", event => {
+    if (!(event.ctrlKey || event.metaKey)) return;
+    const active = document.activeElement;
+    if (active && active.closest && active.closest("input, textarea, [contenteditable]")) return;
+    if (overlayOpen()) return;
+    if (event.key === "=" || event.key === "+") {
+      event.preventDefault();
+      changeZoom(ZOOM_STEP);
+    } else if (event.key === "-" || event.key === "_") {
+      event.preventDefault();
+      changeZoom(-ZOOM_STEP);
+    } else if (event.key === "0") {
+      event.preventDefault();
+      resetZoom();
+    }
+  });
+
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stopAudio();
   });
@@ -5553,6 +5915,9 @@ body.no-scroll { overflow: hidden; }
       });
     }
   }
+
+  pageZoom = readSavedZoom();
+  applyZoom(pageZoom, { persist: false });
 
   updateStars();
   updateLabChrome();

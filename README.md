@@ -71,5 +71,6 @@ python3 -m http.server 8765 --bind 0.0.0.0
 - 含义图采用大号 emoji + 设计舞台，保证离线可用，不依赖外部图片。
 - “课本词”筛选标记的是 44 个外研社（三起）五上/五下核心词，按拼读规则能自然分组的词收录；**不是完整教材词表**，后续可按单元继续补全。
 - 拼读进度保存在 `localStorage` 的 `wordwave.progress.v1`；WORD LAB 进度保存在 `wordwave.wordlab.v1`。页面底部重置会同时清空两者（需点两次确认）。
+- 支持手势缩放：两指捏合可把页面放大到 100%–160%，双击在 100% 和 150% 之间切换；放大后右侧会出现百分比小标签，点一下即可回到 100%。桌面端也可用 `Ctrl`/`Cmd` + `=`、`-`、`0`。缩放值保存在 `localStorage` 的 `wordwave.zoom.v1`。
 - 支持键盘左右方向键切词、Esc 关闭弹层、`prefers-reduced-motion` 下关闭 confetti。
 - 教材词表仅用于核对：五上 <https://yyld.51jiaoxi.com/wushang/wybsq_danci.html>；五下 <https://yyld.51jiaoxi.com/wuxia/wybsq_danci.html>。
