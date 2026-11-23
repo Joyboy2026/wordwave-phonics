@@ -1,6 +1,6 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-23-pwa",
+  "version": "2026-11-23-pwa.2",
   "description": "五年级自然拼读 + WORD LAB 学单词，手机端纯静态站点",
   "entrypoint": "index.html",
   "server": {

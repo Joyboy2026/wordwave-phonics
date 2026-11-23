@@ -3135,10 +3135,10 @@ body.no-scroll { overflow: hidden; }
    the page. */
 .tabs { touch-action: pan-x pan-y; }
 
-/* At 130%+ the narrow layout would run out of room; trim the decorative
-   parts. Media queries still read the unzoomed viewport, so this only kicks
-   in on phones, never on a wide desktop window. */
-@media (max-width: 700px) {
+/* At 120% the header still fits on a normal phone, but a 320px screen gets
+   tight; trim the decorative parts there. Media queries read the unzoomed
+   viewport, so this never kicks in on a desktop window. */
+@media (max-width: 380px) {
   body.is-zoomed .brand-text small,
   body.is-zoomed .onair { display: none; }
 
@@ -3206,7 +3206,7 @@ body.no-scroll { overflow: hidden; }
 .zoom-fab {
   position: fixed;
   right: 0;
-  top: 50%;
+  top: 26%;
   z-index: 84;
   display: inline-flex;
   align-items: center;
@@ -3422,7 +3422,7 @@ body.no-scroll { overflow: hidden; }
   <button type="button" class="zoom-reset" id="zoom-reset" aria-label="恢复 100% 大小" title="恢复 100%"><span id="zoom-value">100%</span></button>
   <button type="button" id="zoom-in" aria-label="放大页面">+</button>
 </div>
-<button class="zoom-fab" id="zoom-fab" type="button" aria-label="页面已放大，点按恢复 100%" hidden>150%</button>
+<button class="zoom-fab" id="zoom-fab" type="button" aria-label="页面已放大，点按恢复 100%" hidden>120%</button>
 
 <div class="modal" id="how-modal" hidden>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="how-title">
@@ -3444,7 +3444,7 @@ body.no-scroll { overflow: hidden; }
         <div><strong>三题挑战</strong><p>每 5 个词一组，听单词选出正确拼写。四组都完成后点亮频道，还有语音和动画鼓励。</p></div>
       </li>
     </ol>
-    <p class="modal-tip"><strong>小提示</strong> 两指捏合可以缩放页面，双击页面快速放大 / 还原；放大后右侧会显示百分比，点一下即可回到 100%。</p>
+    <p class="modal-tip"><strong>小提示</strong> 两指捏合可以在 60%–120% 之间缩小 / 放大页面，双击页面快速放大 / 还原；缩放后右侧会显示百分比，点一下即可回到 100%。</p>
     <button class="btn btn-primary" type="button" data-action="close-how-start" style="width:100%;">知道啦，去调频</button>
   </div>
 </div>
@@ -3539,12 +3539,12 @@ body.no-scroll { overflow: hidden; }
   const zoomFab = $("#zoom-fab");
 
   const ZOOM_KEY = "wordwave.zoom.v1";
-  const MIN_ZOOM = 1;
-  const MAX_ZOOM = 1.6;
+  const MIN_ZOOM = 0.6;
+  const MAX_ZOOM = 1.2;
   const ZOOM_STEP = 0.1;
-  const DOUBLE_TAP_ZOOM = 1.5;
+  const DOUBLE_TAP_ZOOM = 1.2;
   const ZOOM_HUD_HIDE_MS = 3200;
-  const ZOOM_HEADER_TRIM_AT = 1.3;
+  const ZOOM_HEADER_TRIM_AT = 1.2;
 
   let pageZoom = 1;
   let zoomHudTimer = 0;
@@ -4209,7 +4209,7 @@ body.no-scroll { overflow: hidden; }
     const percent = `${Math.round(pageZoom * 100)}%`;
     zoomValue.textContent = percent;
     zoomFab.textContent = percent;
-    zoomFab.setAttribute("aria-label", `页面已放大到 ${percent}，点按恢复 100%`);
+    zoomFab.setAttribute("aria-label", `页面当前 ${percent}，点按恢复 100%`);
     zoomOut.disabled = pageZoom <= MIN_ZOOM + 0.001;
     zoomIn.disabled = pageZoom >= MAX_ZOOM - 0.001;
     if (pinchState) {
@@ -4228,7 +4228,7 @@ body.no-scroll { overflow: hidden; }
       zoomFab.hidden = true;
       return;
     }
-    zoomFab.hidden = pageZoom <= MIN_ZOOM + 0.001;
+    zoomFab.hidden = Math.abs(pageZoom - 1) < 0.001;
   }
 
   function showZoomHud() {
@@ -4252,7 +4252,12 @@ body.no-scroll { overflow: hidden; }
     syncZoomChrome();
     if (options.hud) showZoomHud();
     if (options.announce) {
-      setLive(pageZoom <= MIN_ZOOM + 0.001 ? "页面已恢复原始大小" : `页面已放大到 ${Math.round(pageZoom * 100)}%`);
+      const percent = Math.round(pageZoom * 100);
+      setLive(
+        pageZoom < 1 ? `页面已缩小到 ${percent}%`
+          : pageZoom > 1 ? `页面已放大到 ${percent}%`
+            : "页面已恢复原始大小"
+      );
     }
   }
 
@@ -4324,7 +4329,7 @@ body.no-scroll { overflow: hidden; }
     }
     suppressTapUntil = performance.now() + 450;
     try { window.localStorage.setItem(ZOOM_KEY, String(pageZoom)); } catch (error) {}
-    if (pageZoom > MIN_ZOOM + 0.001) showZoomHud();
+    if (Math.abs(pageZoom - 1) > 0.001) showZoomHud();
     else syncZoomChrome();
   }
 
@@ -4345,7 +4350,7 @@ body.no-scroll { overflow: hidden; }
       event.preventDefault();
       lastTouchTap = { at: 0, x: 0, y: 0 };
       suppressTapUntil = now + 450;
-      applyZoom(pageZoom > MIN_ZOOM + 0.05 ? 1 : DOUBLE_TAP_ZOOM, { hud: true, announce: true });
+      applyZoom(Math.abs(pageZoom - 1) > 0.05 ? 1 : DOUBLE_TAP_ZOOM, { hud: true, announce: true });
     } else {
       lastTouchTap = { at: now, x: touch.clientX, y: touch.clientY };
     }
