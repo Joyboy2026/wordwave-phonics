@@ -3906,13 +3906,16 @@ body.no-scroll { overflow: hidden; }
     }
   }
 
+  function sentenceAudioSrc(word) {
+    const slug = String(word.word || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "");
+    return slug ? `audio/sentences/${slug}.mp3` : "";
+  }
+
   function playSentence(word) {
     if (!word) return;
-    if (!("speechSynthesis" in window)) {
-      toast("这个浏览器暂时不能朗读例句");
-      return;
-    }
-    playClip(null, {
+    playClip(sentenceAudioSrc(word), {
       lang: "en-GB",
       fallback: word.sentence,
       rate: 0.96,
