@@ -1485,6 +1485,43 @@ body.no-scroll { overflow: hidden; }
   text-underline-offset: 3px;
 }
 
+.example-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 13px 0 0;
+}
+
+.example-line .example {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.example-audio {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 0 9px;
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+  background: var(--card);
+  box-shadow: 2px 2px 0 var(--ink);
+  color: var(--ink);
+  font-size: 10.5px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.example-audio:hover { background: var(--lime); }
+.example-audio:active { transform: translate(1px, 1px); box-shadow: none; }
+.example-audio.is-playing { background: var(--lime); }
+.example-audio svg { width: 15px; height: 15px; }
+
+.example-line + .example-cn { margin-top: 6px; }
+
 .example-cn {
   margin: 2px 0 0;
   color: var(--muted);
@@ -3842,6 +3879,11 @@ body.no-scroll { overflow: hidden; }
       fallbackSpeak(fallback, lang, rate, finish);
     };
 
+    if (!src) {
+      useFallback();
+      return;
+    }
+
     try {
       const absolute = new URL(src, window.location.href).href;
       if (player.src !== absolute) {
@@ -3862,6 +3904,21 @@ body.no-scroll { overflow: hidden; }
     } catch (error) {
       useFallback();
     }
+  }
+
+  function playSentence(word) {
+    if (!word) return;
+    if (!("speechSynthesis" in window)) {
+      toast("这个浏览器暂时不能朗读例句");
+      return;
+    }
+    playClip(null, {
+      lang: "en-GB",
+      fallback: word.sentence,
+      rate: 0.96,
+      mode: "sentence"
+    });
+    setLive(`播放例句：${word.sentence}`);
   }
 
   function playWord(word, rate = 1, mode = "normal") {
@@ -3903,6 +3960,11 @@ body.no-scroll { overflow: hidden; }
       node.setAttribute("aria-busy", active ? "true" : "false");
       const label = node.querySelector("[data-slow-label]");
       if (label) label.textContent = active ? "播放中…" : "慢速";
+    });
+    $$(".example-audio").forEach(node => {
+      const active = playing && mode === "sentence";
+      node.classList.toggle("is-playing", active);
+      node.setAttribute("aria-busy", active ? "true" : "false");
     });
   }
 
@@ -4613,7 +4675,12 @@ body.no-scroll { overflow: hidden; }
             <span class="ipa" lang="en">${escapeHTML(word.ipa)}</span>
             <span class="cn">${escapeHTML(word.cn)}</span>
           </div>
-          <p class="example" lang="en">${highlightSentence(word.sentence, word.word)}</p>
+          <div class="example-line">
+            <p class="example" lang="en">${highlightSentence(word.sentence, word.word)}</p>
+            <button class="example-audio" type="button" data-action="play-sentence" aria-label="播放例句语音">
+              ${speakerIcon()}<span>例句</span>
+            </button>
+          </div>
           <p class="example-cn">${escapeHTML(word.cnSentence)}</p>
           <div class="split-note">${splitNote(word.word, group)}</div>
         </div>
@@ -5657,6 +5724,12 @@ body.no-scroll { overflow: hidden; }
       const group = groupById.get(state.groupId);
       const word = group?.words[state.wordIndex];
       if (word) playWord(word, 0.7, "slow");
+      return;
+    }
+    if (action === "play-sentence") {
+      const group = groupById.get(state.groupId);
+      const word = group?.words[state.wordIndex];
+      if (word) playSentence(word);
       return;
     }
     if (action === "prev-word") { previousWord(); return; }
