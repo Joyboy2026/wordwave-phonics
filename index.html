@@ -1496,6 +1496,7 @@ body.no-scroll { overflow: hidden; }
   flex: 1;
   min-width: 0;
   margin: 0;
+  cursor: pointer;
 }
 
 .example-audio {
@@ -4679,7 +4680,7 @@ body.no-scroll { overflow: hidden; }
             <span class="cn">${escapeHTML(word.cn)}</span>
           </div>
           <div class="example-line">
-            <p class="example" lang="en">${highlightSentence(word.sentence, word.word)}</p>
+            <p class="example" lang="en" data-action="play-sentence" title="点击朗读例句">${highlightSentence(word.sentence, word.word)}</p>
             <button class="example-audio" type="button" data-action="play-sentence" aria-label="播放例句语音">
               ${speakerIcon()}<span>例句</span>
             </button>
