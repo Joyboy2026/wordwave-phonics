@@ -1,6 +1,6 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-25-pwa.2",
+  "version": "2026-11-25-pwa.3",
   "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词），手机端纯静态站点",
   "entrypoint": "index.html",
   "server": {
@@ -53,7 +53,8 @@
     "wordwave.progress.v1",
     "wordwave.wordlab.v1",
     "wordwave.zoom.v1",
-    "wordwave.ipa.v1"
+    "wordwave.ipa.v1",
+    "wordwave.browse.v1"
   ],
   "doNotModify": [
     "data.js",

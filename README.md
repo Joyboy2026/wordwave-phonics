@@ -87,5 +87,6 @@ python3 -m http.server 8765 --bind 0.0.0.0
 - “课本词”筛选标记的是 44 个外研社（三起）五上/五下核心词，按拼读规则能自然分组的词收录；**不是完整教材词表**，后续可按单元继续补全。
 - 拼读进度保存在 `localStorage` 的 `wordwave.progress.v1`；WORD LAB 进度保存在 `wordwave.wordlab.v1`；音标掌握进度保存在 `wordwave.ipa.v1`。页面底部重置会同时清空三者（需点两次确认）。
 - 支持手势缩放：两指捏合可在 60%–120% 之间缩小 / 放大页面，双击在 100% 和 120% 之间切换；缩放后右侧会出现百分比小标签，点一下即可回到 100%。桌面端也可用 `Ctrl`/`Cmd` + `=`、`-`、`0`。缩放值保存在 `localStorage` 的 `wordwave.zoom.v1`。
+- 浏览位置记忆：从频道返回首页、从挑战返回频道、从 WORD LAB 返回词表、从音标室返回首页时，会回到离开前的滚动位置；再次进入同一个频道会回到上次浏览的单词。记录保存在 `localStorage` 的 `wordwave.browse.v1`。
 - 支持键盘左右方向键切词、Esc 关闭弹层、`prefers-reduced-motion` 下关闭 confetti。
 - 教材词表仅用于核对：五上 <https://yyld.51jiaoxi.com/wushang/wybsq_danci.html>；五下 <https://yyld.51jiaoxi.com/wuxia/wybsq_danci.html>。

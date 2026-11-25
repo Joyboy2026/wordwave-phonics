@@ -4106,6 +4106,12 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     modalOpen: false
   };
 
+  const BROWSE_KEY = "wordwave.browse.v1";
+  const browseMemory = loadBrowseMemory();
+  let activeBrowseKey = null;
+  let browseSaveBlocked = false;
+  let browsePersistTimer = 0;
+
   const labState = {
     filter: "all",
     session: [],
@@ -4934,8 +4940,81 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     ipaView.hidden = view !== "ipa";
   }
 
+  function jumpScroll(top) {
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, top);
+    if (previous) {
+      root.style.scrollBehavior = previous;
+    } else {
+      root.style.removeProperty("scroll-behavior");
+    }
+  }
+
   function scrollTop() {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    jumpScroll(0);
+  }
+
+  function loadBrowseMemory() {
+    const empty = { scroll: {}, groups: {} };
+    try {
+      const raw = JSON.parse(localStorage.getItem(BROWSE_KEY) || "{}");
+      if (!raw || typeof raw !== "object") return empty;
+      const scroll = {};
+      if (raw.scroll && typeof raw.scroll === "object") {
+        Object.entries(raw.scroll).forEach(([key, value]) => {
+          if (key.startsWith("#/") && Number.isFinite(value) && value >= 0) {
+            scroll[key] = Math.round(value);
+          }
+        });
+      }
+      const groups = {};
+      if (raw.groups && typeof raw.groups === "object") {
+        Object.entries(raw.groups).forEach(([key, value]) => {
+          if (value && Number.isFinite(value.wordIndex)) {
+            groups[key] = { wordIndex: Math.max(0, Math.floor(value.wordIndex)) };
+          }
+        });
+      }
+      return { scroll, groups };
+    } catch (error) {
+      return empty;
+    }
+  }
+
+  function persistBrowseMemory() {
+    try {
+      localStorage.setItem(BROWSE_KEY, JSON.stringify(browseMemory));
+    } catch (error) {
+      /* private mode / quota: memory still works for this page */
+    }
+  }
+
+  function saveCurrentBrowsePosition() {
+    if (!activeBrowseKey) return;
+    if (!state.modalOpen) {
+      browseMemory.scroll[activeBrowseKey] = Math.max(0, Math.round(window.scrollY));
+    }
+    if (state.view === "group" && state.groupId) {
+      browseMemory.groups[state.groupId] = { wordIndex: state.wordIndex };
+    }
+    persistBrowseMemory();
+  }
+
+  function finishRoute(key, sameKey) {
+    const saved = sameKey ? 0 : (browseMemory.scroll[key] || 0);
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if ((window.location.hash || "#/") !== key) return;
+        if (saved > 0) {
+          const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+          jumpScroll(Math.min(saved, max));
+        }
+        activeBrowseKey = key;
+        browseSaveBlocked = false;
+      });
+    });
   }
 
   function go(hash) {
@@ -4948,12 +5027,19 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 
   function route() {
     const hash = window.location.hash || "#/";
+    const newKey = hash;
+    const previousKey = activeBrowseKey;
+    const sameKey = previousKey === newKey;
+    if (previousKey && !sameKey) saveCurrentBrowsePosition();
+    activeBrowseKey = null;
+    browseSaveBlocked = true;
     if (hash === "#/words/study") {
       if (!labState.session.length) {
         go("#/words");
         return;
       }
       openLabStudy();
+      finishRoute(newKey, sameKey);
       return;
     }
     if (hash === "#/words") {
@@ -4961,11 +5047,13 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
       state.quiz = null;
       stopAudio();
       openLabHome();
+      finishRoute(newKey, sameKey);
       return;
     }
     if (hash === "#/ipa") {
       stopAudio();
       openIpaView();
+      finishRoute(newKey, sameKey);
       return;
     }
     if (hash.startsWith("#/group/")) {
@@ -4976,13 +5064,17 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
         return;
       }
       if (state.groupId !== id) {
+        const memory = browseMemory.groups[id];
         state.groupId = id;
-        state.wordIndex = 0;
-        state.setIndex = 0;
+        state.wordIndex = memory
+          ? Math.min(Math.max(0, memory.wordIndex), group.words.length - 1)
+          : 0;
+        state.setIndex = Math.floor(state.wordIndex / state.batchSize);
         state.batchScores = [];
       }
       stopAudio();
       openGroupView(group);
+      finishRoute(newKey, sameKey);
       return;
     }
     if (hash.startsWith("#/quiz/")) {
@@ -4992,18 +5084,28 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
         go("#/");
         return;
       }
+      if (state.groupId !== id) {
+        const memory = browseMemory.groups[id];
+        state.groupId = id;
+        state.wordIndex = memory
+          ? Math.min(Math.max(0, memory.wordIndex), group.words.length - 1)
+          : 0;
+        state.setIndex = Math.floor(state.wordIndex / state.batchSize);
+        state.batchScores = [];
+      }
       if (!state.quiz || state.quiz.groupId !== id) {
         state.quiz = makeQuiz(group, currentBatch(group), state.setIndex);
       }
-      state.groupId = id;
       stopAudio();
       openQuizView(group);
+      finishRoute(newKey, sameKey);
       return;
     }
     state.groupId = null;
     state.quiz = null;
     stopAudio();
     openHome();
+    finishRoute(newKey, sameKey);
   }
 
   function openHome() {
@@ -6441,20 +6543,12 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     if (action === "open-group") {
       const group = groupById.get(actionNode.dataset.id);
       if (!group) return;
-      state.groupId = group.id;
-      state.wordIndex = 0;
-      state.setIndex = 0;
-      state.batchScores = [];
       state.quiz = null;
       go(`#/group/${group.id}`);
       return;
     }
     if (action === "start") {
       const group = groupById.get(actionNode.dataset.id) || groups.find(item => !isDone(item.id)) || groups[0];
-      state.groupId = group.id;
-      state.wordIndex = 0;
-      state.setIndex = 0;
-      state.batchScores = [];
       state.quiz = null;
       go(`#/group/${group.id}`);
       return;
@@ -6492,7 +6586,6 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
       stopAudio();
       const id = state.quiz?.groupId || state.groupId;
       if (id) {
-        state.wordIndex = Math.max(0, (groupById.get(id)?.words.length || 1) - 1);
         go(`#/group/${id}`);
       } else {
         go("#/");
@@ -6758,6 +6851,25 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stopAudio();
+  });
+
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!activeBrowseKey || browseSaveBlocked || state.modalOpen) return;
+    browseMemory.scroll[activeBrowseKey] = Math.max(0, Math.round(window.scrollY));
+    if (!browsePersistTimer) {
+      browsePersistTimer = window.setTimeout(() => {
+        browsePersistTimer = 0;
+        persistBrowseMemory();
+      }, 450);
+    }
+  }, { passive: true });
+
+  window.addEventListener("pagehide", () => {
+    saveCurrentBrowsePosition();
   });
 
   window.addEventListener("hashchange", route);
