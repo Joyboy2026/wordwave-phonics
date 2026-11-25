@@ -2,7 +2,7 @@
  * Shell is precached; word/sentence audio is cached on first play.
  * Bump VERSION whenever the shell changes.
  */
-const VERSION = "wordwave-2026-11-24-v8";
+const VERSION = "wordwave-2026-11-25-v9";
 const SHELL_CACHE = `wordwave-shell-${VERSION}`;
 const RUNTIME_CACHE = `wordwave-runtime-${VERSION}`;
 const SCOPE = self.registration.scope;
@@ -13,6 +13,7 @@ const SHELL = [
   "manifest.json",
   "data.js",
   "lab.js",
+  "ipa.js",
   "favicon.svg",
   "fonts/fredoka-latin.woff2",
   "icons/icon-192.png",

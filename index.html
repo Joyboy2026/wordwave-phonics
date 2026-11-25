@@ -3242,6 +3242,8 @@ body.no-scroll { overflow: hidden; }
 .zoom-hud button:disabled { opacity: 0.35; }
 .zoom-hud .zoom-reset { min-width: 60px; font-size: 12px; letter-spacing: 0.04em; }
 
+body[data-view="ipa"] .zoom-fab { top: 38%; }
+
 .zoom-fab {
   position: fixed;
   right: 0;
@@ -3295,6 +3297,308 @@ body.no-scroll { overflow: hidden; }
 }
 
 .modal-tip strong { color: var(--ink); }
+
+/* ---------- IPA SOUND LAB ---------- */
+.ipa-banner {
+  margin-top: 0;
+  background: linear-gradient(100deg, var(--card) 0%, #e9eeff 100%);
+}
+.ipa-stamp {
+  background: var(--blue);
+  color: var(--card);
+  font-size: 17px;
+}
+.ipa-banner .eyebrow::before { background: var(--blue); }
+.ipa-banner .lab-banner-cta {
+  background: var(--blue);
+  color: var(--paper);
+}
+.ipa-banner .lab-banner-progress { color: var(--blue); }
+.sub-chip i.ipa-chip-dot { background: var(--blue); }
+
+.ipa-title { font-size: clamp(40px, 6.2vw, 72px); text-wrap: balance; }
+.ipa-title .hl { color: var(--blue); }
+.ipa-title .tail { color: var(--coral); }
+
+.ipa-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+.ipa-hint {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.ipa-group { margin: 0 0 26px; }
+.ipa-group:last-child { margin-bottom: 6px; }
+.ipa-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 10px;
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--ink);
+}
+.ipa-group-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+.ipa-group[data-kind="vowel"] .ipa-group-head h2 { color: #c24127; }
+.ipa-group[data-kind="consonant"] .ipa-group-head h2 { color: var(--blue); }
+.ipa-group-head span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.ipa-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.ipa-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 112px;
+  padding: 11px 11px 10px;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: 3px 3px 0 var(--ink);
+  text-align: left;
+  transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+.ipa-group[data-kind="vowel"] .ipa-card { background: #fffaf4; }
+.ipa-group[data-kind="consonant"] .ipa-card { background: #fbfbff; }
+.ipa-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+  background: #fffef0;
+}
+.ipa-card:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+.ipa-card.is-learned { background: #f4ffd9; }
+.ipa-card-sym {
+  font-family: "DejaVu Sans", "Noto Sans", "Segoe UI", var(--body);
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.ipa-group[data-kind="vowel"] .ipa-card-sym { color: #c24127; }
+.ipa-group[data-kind="consonant"] .ipa-card-sym { color: var(--blue); }
+.ipa-card-word {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.ipa-card-word mark,
+.ipa-modal-card h2 mark {
+  display: inline-block;
+  padding: 0 2px;
+  border-radius: 4px;
+  background: var(--lime);
+  color: inherit;
+  line-height: 1.02;
+  vertical-align: baseline;
+}
+.ipa-card-cn {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.ipa-card-check {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--paper);
+  font-size: 10px;
+  font-weight: 900;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.ipa-card.is-learned .ipa-card-check { opacity: 1; transform: scale(1); }
+.ipa-empty {
+  padding: 26px 14px;
+  border: 2px dashed var(--line);
+  border-radius: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.ipa-modal-card { width: min(480px, 100%); }
+.ipa-detail-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 5px 0 2px;
+}
+.ipa-detail-sym {
+  font-family: "DejaVu Sans", "Noto Sans", "Segoe UI", var(--body);
+  font-size: clamp(54px, 15vw, 78px);
+  font-weight: 700;
+  line-height: 0.95;
+  color: var(--blue);
+}
+.ipa-detail-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+.ipa-detail-index,
+.ipa-detail-voice {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.ipa-detail-voice {
+  padding: 3px 7px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--soft);
+}
+.ipa-modal-card h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 2px 28px 0 0;
+  font-family: var(--display);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.ipa-detail-cn {
+  color: var(--muted);
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.ipa-detail-tip {
+  margin: 11px 0 0;
+  padding: 10px 12px;
+  border-left: 5px solid var(--blue);
+  border-radius: 0 10px 10px 0;
+  background: var(--soft);
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.ipa-detail-spell {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ipa-detail-spell b {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.ipa-detail-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.ipa-detail-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0 8px;
+}
+.ipa-detail-actions .btn {
+  min-height: 46px;
+  padding-inline: 10px;
+  font-size: 13px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.ipa-detail-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+.ipa-detail-nav .btn {
+  min-height: 42px;
+  padding-inline: 8px;
+  font-size: 12px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.ipa-learn-btn {
+  width: 100%;
+  min-height: 46px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 900;
+  transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+.ipa-learn-btn:hover { background: var(--soft); }
+.ipa-learn-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+.ipa-learn-btn.is-learned { background: var(--lime); }
+
+@media (max-width: 900px) {
+  .ipa-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .ipa-title { font-size: clamp(38px, 10.5vw, 56px); }
+  .ipa-toolbar { margin-bottom: 15px; }
+  .ipa-hint { display: none; }
+  .ipa-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ipa-group { margin-bottom: 21px; }
+  .ipa-group-head h2 { font-size: 17px; }
+  .ipa-card { min-height: 106px; padding: 10px; border-radius: 12px; }
+  .ipa-card-sym { font-size: 24px; }
+  .ipa-card-word { font-size: 17px; }
+  .ipa-card-cn { font-size: 10.5px; }
+  .ipa-modal-card { padding: 20px 17px 18px; }
+}
+@media (max-width: 380px) {
+  .ipa-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ipa-detail-actions { grid-template-columns: 1fr; }
+  .ipa-modal-card h2 { font-size: 32px; }
+}
 
 </style>
 </head>
@@ -3387,6 +3691,17 @@ body.no-scroll { overflow: hidden; }
         <span class="lab-banner-cta">进入实验室 <b aria-hidden="true">→</b></span>
       </a>
 
+      <a class="lab-banner ipa-banner" href="#/ipa" aria-label="进入音标室学习 48 个音标">
+        <span class="lab-stamp ipa-stamp" aria-hidden="true">48<br>IPA</span>
+        <span class="lab-banner-copy">
+          <span class="eyebrow">NEW · 学音标</span>
+          <strong>把声音拆到最小。</strong>
+          <span>20 个元音 + 28 个辅音 · 例词跟读 · 48 张音标卡</span>
+          <span class="lab-banner-progress" id="ipa-banner-progress">已掌握 0 / 48</span>
+        </span>
+        <span class="lab-banner-cta">进入音标室 <b aria-hidden="true">→</b></span>
+      </a>
+
       <section class="channels" id="channels" aria-labelledby="channels-title">
         <div class="section-head">
           <div>
@@ -3425,6 +3740,45 @@ body.no-scroll { overflow: hidden; }
       </div>
     </header>
     <div class="lab-main" id="lab-main" tabindex="-1"></div>
+  </section>
+
+  <section class="view" id="view-ipa" hidden>
+    <header class="subbar">
+      <div class="subbar-inner">
+        <button class="back-btn" type="button" data-action="ipa-home" aria-label="返回首页">← <span>首页</span></button>
+        <div class="subbar-center"><span class="sub-chip"><i class="ipa-chip-dot"></i><span>SOUND LAB · 音标</span></span></div>
+        <span class="lab-count-chip" id="ipa-count-chip">0 / 48</span>
+      </div>
+    </header>
+    <div class="lab-main ipa-main" id="ipa-main" tabindex="-1">
+      <div class="lab-home-head">
+        <div>
+          <p class="eyebrow">SOUND LAB · 48 PHONEMES</p>
+          <h1 class="lab-title ipa-title"><span class="hl">把声音</span><span class="tail">拆到最小。</span></h1>
+          <p class="lab-lede">20 个元音，28 个辅音。点开一张音标卡，听例词、看口型提示，把最容易混的音一个个收进自己的耳朵。</p>
+          <div class="lab-stats">
+            <span class="lab-stat"><b>48</b> 个音标</span>
+            <span class="lab-stat"><b>20</b> 元音</span>
+            <span class="lab-stat"><b>28</b> 辅音</span>
+          </div>
+        </div>
+        <div class="lab-progress-panel">
+          <p class="eyebrow">SOUND PROGRESS</p>
+          <div class="lab-progress-number"><span id="ipa-learned-num">0</span><small>/ 48</small></div>
+          <p>点开音标卡，听完例词后标记已掌握。</p>
+          <div class="lab-progress-line"><i id="ipa-progress-fill" style="width:0%"></i></div>
+        </div>
+      </div>
+      <div class="ipa-toolbar">
+        <div class="lab-filters" role="group" aria-label="按音标类型筛选">
+          <button class="lab-filter ipa-tab is-active" type="button" data-action="ipa-filter" data-filter="all" aria-pressed="true">全部 <b>48</b></button>
+          <button class="lab-filter ipa-tab" type="button" data-action="ipa-filter" data-filter="vowel" aria-pressed="false">元音 <b>20</b></button>
+          <button class="lab-filter ipa-tab" type="button" data-action="ipa-filter" data-filter="consonant" aria-pressed="false">辅音 <b>28</b></button>
+        </div>
+        <span class="ipa-hint">点击卡片听例词 · 音标本身不单独发音</span>
+      </div>
+      <div id="ipa-groups"></div>
+    </div>
   </section>
 
   <section class="view" id="view-group" hidden>
@@ -3488,6 +3842,33 @@ body.no-scroll { overflow: hidden; }
   </div>
 </div>
 
+<div class="modal" id="ipa-modal" hidden>
+  <div class="modal-card ipa-modal-card" role="dialog" aria-modal="true" aria-labelledby="ipa-detail-title">
+    <button class="close-x" type="button" data-action="close-ipa" aria-label="关闭音标详情">×</button>
+    <p class="eyebrow" id="ipa-detail-type">VOWEL · 短元音</p>
+    <div class="ipa-detail-top">
+      <div class="ipa-detail-sym" id="ipa-detail-sym">/ɪ/</div>
+      <div class="ipa-detail-meta">
+        <span class="ipa-detail-index" id="ipa-detail-index">01 / 48</span>
+        <span class="ipa-detail-voice" id="ipa-detail-voice">浊音 · VOICED</span>
+      </div>
+    </div>
+    <h2 id="ipa-detail-title"><span id="ipa-detail-word">sit</span> <span class="ipa-detail-cn" id="ipa-detail-cn">坐</span></h2>
+    <p class="ipa-detail-tip" id="ipa-detail-tip">短促轻快，舌前部稍抬，嘴角放松。</p>
+    <p class="ipa-detail-spell">常见拼写 <b id="ipa-detail-spell">i, y</b></p>
+    <p class="ipa-detail-note">音标是记音符号，这里播放的是例词 <b id="ipa-detail-note-word">sit</b> 的英式读音。</p>
+    <div class="ipa-detail-actions">
+      <button class="btn btn-primary ipa-play-btn" type="button" data-action="ipa-play">听例词</button>
+      <button class="btn btn-ghost ipa-slow-btn" type="button" data-action="ipa-slow">0.7× 慢速</button>
+    </div>
+    <div class="ipa-detail-nav">
+      <button class="btn btn-ghost" type="button" data-action="ipa-prev">← 上一个</button>
+      <button class="btn btn-ghost" type="button" data-action="ipa-next">下一个 →</button>
+    </div>
+    <button class="ipa-learn-btn" type="button" data-action="ipa-toggle" id="ipa-learn-btn" aria-pressed="false">标记已掌握</button>
+  </div>
+</div>
+
 <div class="celebration" id="celebration" hidden>
   <canvas id="confetti" aria-hidden="true"></canvas>
   <div class="celebration-card" role="dialog" aria-modal="true" aria-labelledby="win-title">
@@ -3529,6 +3910,7 @@ body.no-scroll { overflow: hidden; }
 
 <script src="data.js"></script>
 <script src="lab.js"></script>
+<script src="ipa.js"></script>
 <script>
 (() => {
   "use strict";
@@ -3567,6 +3949,9 @@ body.no-scroll { overflow: hidden; }
   const quizView = $("#view-quiz");
   const labView = $("#view-words");
   const labMain = $("#lab-main");
+  const ipaView = $("#view-ipa");
+  const ipaMain = $("#ipa-main");
+  const ipaModal = $("#ipa-modal");
   const labWin = $("#lab-win");
   const labConfetti = $("#lab-confetti");
   const burstCanvas = $("#burst-confetti");
@@ -3603,6 +3988,7 @@ body.no-scroll { overflow: hidden; }
   let lastFocused = null;
 
   const LAB_KEY = "wordwave.wordlab.v1";
+  const IPA_KEY = "wordwave.ipa.v1";
   const CORRECT_RESPONSES = [
     { file: "audio/ui/correct-1.mp3", text: "答对啦！+1", say: "答对啦，真棒！" },
     { file: "audio/ui/correct-2.mp3", text: "耳朵真灵！+1", say: "耳朵真灵，又对啦！" },
@@ -3618,6 +4004,12 @@ body.no-scroll { overflow: hidden; }
     return base ? { ...base, ...item, source: base.source || "" } : null;
   }).filter(Boolean);
   const labByWord = new Map(labEntries.map(item => [item.word, item]));
+
+  const IPA_DATA = window.IPA_DATA && Array.isArray(window.IPA_DATA.phonemes) ? window.IPA_DATA : { phonemes: [] };
+  const ipaPhonemes = IPA_DATA.phonemes;
+  const ipaById = new Map(ipaPhonemes.map(item => [item.id, item]));
+  const ipaProgress = loadIpaProgress();
+  const ipaState = { filter: "all", currentId: null };
 
   const state = {
     view: "home",
@@ -3674,6 +4066,26 @@ body.no-scroll { overflow: hidden; }
   function saveProgress() {
     try {
       localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    } catch (error) {
+      /* private mode can reject writes; the session still works */
+    }
+  }
+
+  function loadIpaProgress() {
+    try {
+      const raw = localStorage.getItem(IPA_KEY);
+      if (!raw) return new Set();
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return new Set();
+      return new Set(parsed.filter(id => ipaById.has(id)));
+    } catch (error) {
+      return new Set();
+    }
+  }
+
+  function saveIpaProgress() {
+    try {
+      localStorage.setItem(IPA_KEY, JSON.stringify(Array.from(ipaProgress)));
     } catch (error) {
       /* private mode can reject writes; the session still works */
     }
@@ -3970,6 +4382,18 @@ body.no-scroll { overflow: hidden; }
       node.classList.toggle("is-playing", active);
       node.setAttribute("aria-busy", active ? "true" : "false");
     });
+    const ipaPlaying = playing && mode === "ipa";
+    const ipaSlowPlaying = playing && mode === "ipa-slow";
+    $$(".ipa-play-btn").forEach(node => {
+      node.classList.toggle("is-playing", ipaPlaying);
+      node.setAttribute("aria-busy", ipaPlaying ? "true" : "false");
+      node.textContent = ipaPlaying ? "正在播放…" : "听例词";
+    });
+    $$(".ipa-slow-btn").forEach(node => {
+      node.classList.toggle("is-playing", ipaSlowPlaying);
+      node.setAttribute("aria-busy", ipaSlowPlaying ? "true" : "false");
+      node.textContent = ipaSlowPlaying ? "播放中…" : "0.7× 慢速";
+    });
   }
 
   function stopCelebrationConfetti(selector = "#confetti") {
@@ -4255,10 +4679,10 @@ body.no-scroll { overflow: hidden; }
     app.inert = false;
     state.modalOpen = false;
     document.body.classList.remove("no-scroll");
-    if (lastFocused && typeof lastFocused.focus === "function") {
+    if (lastFocused && document.contains(lastFocused) && typeof lastFocused.focus === "function") {
       lastFocused.focus({ preventScroll: true });
-      lastFocused = null;
     }
+    lastFocused = null;
     syncZoomChrome();
   }
 
@@ -4269,7 +4693,7 @@ body.no-scroll { overflow: hidden; }
   }
 
   function overlayOpen() {
-    return !howModal.hidden || !celebration.hidden || !labWin.hidden;
+    return !howModal.hidden || !celebration.hidden || !labWin.hidden || !ipaModal.hidden;
   }
 
   function syncZoomChrome() {
@@ -4425,10 +4849,12 @@ body.no-scroll { overflow: hidden; }
 
   function setView(view) {
     state.view = view;
+    document.body.dataset.view = view;
     homeView.hidden = view !== "home";
     groupView.hidden = view !== "group";
     quizView.hidden = view !== "quiz";
     labView.hidden = view !== "words";
+    ipaView.hidden = view !== "ipa";
   }
 
   function scrollTop() {
@@ -4458,6 +4884,11 @@ body.no-scroll { overflow: hidden; }
       state.quiz = null;
       stopAudio();
       openLabHome();
+      return;
+    }
+    if (hash === "#/ipa") {
+      stopAudio();
+      openIpaView();
       return;
     }
     if (hash.startsWith("#/group/")) {
@@ -5178,6 +5609,203 @@ body.no-scroll { overflow: hidden; }
     });
   }
 
+  /* ---------- sound lab: IPA ---------- */
+
+  function updateIpaChrome() {
+    const total = ipaPhonemes.length;
+    const learned = ipaProgress.size;
+    const chip = $("#ipa-count-chip");
+    if (chip) chip.textContent = `${learned} / ${total}`;
+    const banner = $("#ipa-banner-progress");
+    if (banner) banner.textContent = `已掌握 ${learned} / ${total}`;
+    const num = $("#ipa-learned-num");
+    if (num) num.textContent = String(learned);
+    const fill = $("#ipa-progress-fill");
+    if (fill) fill.style.width = `${total ? Math.round((learned / total) * 100) : 0}%`;
+  }
+
+  function openIpaView() {
+    setView("ipa");
+    document.title = "音标室 · WORDWAVE";
+    renderIpa();
+    scrollTop();
+    window.requestAnimationFrame(() => {
+      if (ipaMain) ipaMain.focus({ preventScroll: true });
+    });
+  }
+
+  function setIpaFilter(filter) {
+    ipaState.filter = ["all", "vowel", "consonant"].includes(filter) ? filter : "all";
+    renderIpa();
+  }
+
+  function ipaWordMarkup(item) {
+    const word = escapeHTML(item.word);
+    const mark = escapeHTML(item.highlight || "");
+    if (!mark) return word;
+    const index = word.indexOf(mark);
+    if (index < 0) return word;
+    return `${word.slice(0, index)}<mark>${mark}</mark>${word.slice(index + mark.length)}`;
+  }
+
+  function ipaCardMarkup(item, learned) {
+    return `
+      <button class="ipa-card${learned ? " is-learned" : ""}" type="button"
+        data-action="open-ipa" data-id="${escapeHTML(item.id)}"
+        aria-label="${escapeHTML(item.sym)} 例词 ${escapeHTML(item.word)}${learned ? "，已掌握" : ""}">
+        <span class="ipa-card-check" aria-hidden="true">✓</span>
+        <span class="ipa-card-sym">${escapeHTML(item.sym)}</span>
+        <span class="ipa-card-word">${ipaWordMarkup(item)}</span>
+        <span class="ipa-card-cn">${escapeHTML(item.cn)}</span>
+      </button>
+    `;
+  }
+
+  function renderIpa() {
+    updateIpaChrome();
+    $$(".ipa-tab").forEach(tab => {
+      const active = tab.dataset.filter === ipaState.filter;
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    const host = $("#ipa-groups");
+    if (!host) return;
+    if (!ipaPhonemes.length) {
+      host.innerHTML = '<div class="ipa-empty">音标数据没有加载成功，请检查 <b>ipa.js</b> 是否正确加载。</div>';
+      return;
+    }
+    const list = ipaState.filter === "all"
+      ? ipaPhonemes
+      : ipaPhonemes.filter(item => item.group === ipaState.filter);
+    let html = "";
+    let lastKey = "";
+    list.forEach(item => {
+      const key = `${item.group}:${item.section}`;
+      if (key !== lastKey) {
+        if (lastKey) html += "</div></section>";
+        const count = list.filter(entry => entry.group === item.group && entry.section === item.section).length;
+        html += `
+          <section class="ipa-group" data-kind="${item.group}">
+            <div class="ipa-group-head">
+              <h2>${item.group === "vowel" ? "元音" : "辅音"} · ${escapeHTML(item.section)}</h2>
+              <span>${count} 个音标</span>
+            </div>
+            <div class="ipa-grid">
+        `;
+        lastKey = key;
+      }
+      html += ipaCardMarkup(item, ipaProgress.has(item.id));
+    });
+    if (lastKey) html += "</div></section>";
+    host.innerHTML = html || '<div class="ipa-empty">这个筛选下还没有音标</div>';
+  }
+
+  function renderIpaDetail() {
+    const item = ipaById.get(ipaState.currentId);
+    if (!item) return;
+    const index = ipaPhonemes.indexOf(item);
+    const type = $("#ipa-detail-type");
+    if (type) type.textContent = `${item.group === "vowel" ? "VOWEL" : "CONSONANT"} · ${item.section}`;
+    const sym = $("#ipa-detail-sym");
+    if (sym) sym.textContent = item.sym;
+    const indexEl = $("#ipa-detail-index");
+    if (indexEl) {
+      indexEl.textContent = `${String(index + 1).padStart(2, "0")} / ${String(ipaPhonemes.length).padStart(2, "0")}`;
+    }
+    const voice = $("#ipa-detail-voice");
+    if (voice) voice.textContent = item.voiced ? "浊音 · VOICED" : "清音 · VOICELESS";
+    const word = $("#ipa-detail-word");
+    if (word) word.innerHTML = ipaWordMarkup(item);
+    const cn = $("#ipa-detail-cn");
+    if (cn) cn.textContent = item.cn;
+    const tip = $("#ipa-detail-tip");
+    if (tip) tip.textContent = item.tip;
+    const spell = $("#ipa-detail-spell");
+    if (spell) spell.textContent = item.spell;
+    const noteWord = $("#ipa-detail-note-word");
+    if (noteWord) noteWord.textContent = item.word;
+    const learned = ipaProgress.has(item.id);
+    const button = $("#ipa-learn-btn");
+    if (button) {
+      button.classList.toggle("is-learned", learned);
+      button.textContent = learned ? "✓ 已掌握，点按取消" : "标记已掌握";
+      button.setAttribute("aria-pressed", learned ? "true" : "false");
+    }
+  }
+
+  function playIpa(id, rate = 1, mode = "ipa") {
+    const item = ipaById.get(id);
+    if (!item) return;
+    playClip(`audio/ipa/${item.id}.mp3`, {
+      rate,
+      mode,
+      lang: "en-GB",
+      fallback: item.word
+    });
+    setLive(`播放例词：${item.word}`);
+  }
+
+  function openIpaDetail(id) {
+    const item = ipaById.get(id);
+    if (!item) return;
+    lastFocused = document.activeElement;
+    ipaState.currentId = id;
+    renderIpaDetail();
+    ipaModal.hidden = false;
+    app.inert = true;
+    state.modalOpen = true;
+    document.body.classList.add("no-scroll");
+    syncZoomChrome();
+    playIpa(id, 1, "ipa");
+    window.setTimeout(() => {
+      const close = $("[data-action='close-ipa']", ipaModal);
+      if (close) close.focus({ preventScroll: true });
+    }, 40);
+  }
+
+  function closeIpaDetail() {
+    if (ipaModal.hidden) return;
+    stopAudio();
+    ipaModal.hidden = true;
+    app.inert = false;
+    state.modalOpen = false;
+    document.body.classList.remove("no-scroll");
+    let focusTarget = lastFocused;
+    if (!focusTarget || !document.contains(focusTarget)) {
+      focusTarget = ipaView.querySelector(`.ipa-card[data-id="${ipaState.currentId}"]`);
+    }
+    if (focusTarget && typeof focusTarget.focus === "function") {
+      focusTarget.focus({ preventScroll: true });
+    }
+    lastFocused = null;
+    syncZoomChrome();
+  }
+
+  function navigateIpa(delta) {
+    if (!ipaPhonemes.length) return;
+    const current = ipaPhonemes.findIndex(item => item.id === ipaState.currentId);
+    if (current < 0) return;
+    const next = (current + delta + ipaPhonemes.length) % ipaPhonemes.length;
+    ipaState.currentId = ipaPhonemes[next].id;
+    renderIpaDetail();
+    playIpa(ipaState.currentId, 1, "ipa");
+  }
+
+  function toggleIpaLearned() {
+    const item = ipaById.get(ipaState.currentId);
+    if (!item) return;
+    const wasLearned = ipaProgress.has(item.id);
+    if (wasLearned) ipaProgress.delete(item.id);
+    else ipaProgress.add(item.id);
+    saveIpaProgress();
+    renderIpa();
+    const refreshedCard = ipaView.querySelector(`.ipa-card[data-id="${item.id}"]`);
+    if (refreshedCard) lastFocused = refreshedCard;
+    renderIpaDetail();
+    toast(wasLearned ? `已取消 ${item.sym}` : `已掌握 ${item.sym} ${item.word}`);
+    setLive(wasLearned ? `已取消掌握 ${item.word}` : `已标记掌握 ${item.word}`);
+  }
+
   function renderLabHome() {
     if (!labMain) return;
     updateLabChrome();
@@ -5770,6 +6398,31 @@ body.no-scroll { overflow: hidden; }
       else go("#/");
       return;
     }
+    if (action === "ipa-home") {
+      stopAudio();
+      go("#/");
+      return;
+    }
+    if (action === "ipa-filter") {
+      setIpaFilter(actionNode.dataset.filter || "all");
+      return;
+    }
+    if (action === "open-ipa") {
+      openIpaDetail(actionNode.dataset.id);
+      return;
+    }
+    if (action === "close-ipa") { closeIpaDetail(); return; }
+    if (action === "ipa-play") {
+      if (ipaState.currentId) playIpa(ipaState.currentId, 1, "ipa");
+      return;
+    }
+    if (action === "ipa-slow") {
+      if (ipaState.currentId) playIpa(ipaState.currentId, 0.7, "ipa-slow");
+      return;
+    }
+    if (action === "ipa-toggle") { toggleIpaLearned(); return; }
+    if (action === "ipa-prev") { navigateIpa(-1); return; }
+    if (action === "ipa-next") { navigateIpa(1); return; }
     if (action === "lab-map" || action === "lab-win-map") {
       closeLabWin(true);
       return;
@@ -5846,7 +6499,11 @@ body.no-scroll { overflow: hidden; }
       saveProgress();
       localStorage.removeItem(LAB_KEY);
       labProgress = { learned: {} };
+      localStorage.removeItem(IPA_KEY);
+      ipaProgress.clear();
       updateLabChrome();
+      updateIpaChrome();
+      if (state.view === "ipa") renderIpa();
       resetArmed = false;
       window.clearTimeout(resetTimer);
       actionNode.classList.remove("is-armed");
@@ -5896,6 +6553,13 @@ body.no-scroll { overflow: hidden; }
   }
 
   document.addEventListener("keydown", event => {
+    if (!ipaModal.hidden) {
+      if (event.key === "Escape") { closeIpaDetail(); return; }
+      if (event.key === "ArrowLeft") { event.preventDefault(); navigateIpa(-1); return; }
+      if (event.key === "ArrowRight") { event.preventDefault(); navigateIpa(1); return; }
+      trapFocus(event, ipaModal);
+      return;
+    }
     if (!labWin.hidden) {
       if (event.key === "Escape") { closeLabWin(); return; }
       trapFocus(event, labWin);
@@ -5919,6 +6583,10 @@ body.no-scroll { overflow: hidden; }
 
   howModal.addEventListener("click", event => {
     if (event.target === howModal) closeHow();
+  });
+
+  ipaModal.addEventListener("click", event => {
+    if (event.target === ipaModal) closeIpaDetail();
   });
 
   celebration.addEventListener("click", event => {
@@ -6016,6 +6684,7 @@ body.no-scroll { overflow: hidden; }
 
   updateStars();
   updateLabChrome();
+  updateIpaChrome();
   route();
 })();
 </script>
