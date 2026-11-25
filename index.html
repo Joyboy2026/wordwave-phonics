@@ -98,6 +98,15 @@ a { color: inherit; }
 
 [hidden] { display: none !important; }
 
+.view {
+  animation: viewFadeIn 140ms ease-out;
+}
+
+@keyframes viewFadeIn {
+  from { opacity: 0.82; }
+  to { opacity: 1; }
+}
+
 .sr-only {
   position: absolute !important;
   width: 1px;
@@ -5003,18 +5012,14 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   }
 
   function finishRoute(key, sameKey) {
+    if ((window.location.hash || "#/") !== key) return;
     const saved = sameKey ? 0 : (browseMemory.scroll[key] || 0);
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        if ((window.location.hash || "#/") !== key) return;
-        if (saved > 0) {
-          const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-          jumpScroll(Math.min(saved, max));
-        }
-        activeBrowseKey = key;
-        browseSaveBlocked = false;
-      });
-    });
+    if (saved > 0) {
+      const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      jumpScroll(Math.min(saved, max));
+    }
+    activeBrowseKey = key;
+    browseSaveBlocked = false;
   }
 
   function go(hash) {
