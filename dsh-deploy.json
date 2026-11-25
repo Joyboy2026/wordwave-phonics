@@ -1,7 +1,7 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-25-pwa.1",
-  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标，手机端纯静态站点",
+  "version": "2026-11-25-pwa.2",
+  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词），手机端纯静态站点",
   "entrypoint": "index.html",
   "server": {
     "cwd": ".",
@@ -25,7 +25,9 @@
     "uiAudioFiles": 10,
     "channelSentenceAudioFiles": 840,
     "ipaPhonemes": 48,
-    "ipaAudioFiles": 48
+    "ipaAudioFiles": 48,
+    "ipaWords": 240,
+    "ipaWordAudioFiles": 163
   },
   "checks": [
     "test -f index.html",
@@ -42,8 +44,10 @@
     "curl -fsS http://127.0.0.1:8765/audio/words/unhappy.mp3 -o /dev/null",
     "curl -fsS http://127.0.0.1:8765/audio/lab/sentences/unhappy.mp3 -o /dev/null",
     "curl -fsS http://127.0.0.1:8765/audio/sentences/unhappy.mp3 -o /dev/null",
-    "find audio/ipa -type f | wc -l  # 48",
-    "curl -fsS http://127.0.0.1:8765/audio/ipa/ae.mp3 -o /dev/null"
+    "find audio/ipa -maxdepth 1 -type f | wc -l  # 48",
+    "find audio/ipa/words -type f | wc -l  # 163",
+    "curl -fsS http://127.0.0.1:8765/audio/ipa/ae.mp3 -o /dev/null",
+    "curl -fsS http://127.0.0.1:8765/audio/ipa/words/fish.mp3 -o /dev/null"
   ],
   "storageKeys": [
     "wordwave.progress.v1",

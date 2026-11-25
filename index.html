@@ -3422,11 +3422,25 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   line-height: 1.02;
   vertical-align: baseline;
 }
-.ipa-card-cn {
+.ipa-card-bottom {
   margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+}
+.ipa-card-cn {
   color: var(--muted);
   font-size: 11px;
   font-weight: 700;
+}
+.ipa-card-words {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 .ipa-card-check {
   position: absolute;
@@ -3539,6 +3553,64 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   font-size: 11px;
   line-height: 1.55;
 }
+.ipa-words-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 13px 0 7px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+.ipa-words-label small {
+  font-size: 10px;
+  font-weight: 700;
+}
+.ipa-word-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0 0 13px;
+}
+.ipa-word-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 2px solid var(--line);
+  border-radius: 9px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 rgba(23, 23, 27, 0.16);
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: left;
+}
+.ipa-word-chip-word {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--display);
+}
+.ipa-word-chip-cn {
+  flex: none;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+.ipa-word-chip mark {
+  padding: 0 1px;
+  border-radius: 3px;
+  background: var(--lime);
+  color: var(--ink);
+}
+.ipa-word-chip:hover { background: var(--soft); }
+.ipa-word-chip.is-active { border-color: var(--ink); background: var(--ink); color: var(--card); }
+.ipa-word-chip.is-active .ipa-word-chip-cn { color: #d8d2c8; }
 .ipa-detail-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3593,6 +3665,8 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   .ipa-card-sym { font-size: 24px; }
   .ipa-card-word { font-size: 17px; }
   .ipa-card-cn { font-size: 10.5px; }
+  .ipa-card-words { font-size: 8.5px; }
+  .ipa-word-chip { padding: 6px 6px; font-size: 11.5px; }
   .ipa-modal-card { padding: 20px 17px 18px; }
 }
 @media (max-width: 380px) {
@@ -3858,6 +3932,8 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     <p class="ipa-detail-tip" id="ipa-detail-tip">短促轻快，舌前部稍抬，嘴角放松。</p>
     <p class="ipa-detail-spell">常见拼写 <b id="ipa-detail-spell">i, y</b></p>
     <p class="ipa-detail-note">音标是记音符号，这里播放的是例词 <b id="ipa-detail-note-word">sit</b> 的英式读音。</p>
+    <p class="ipa-words-label">例词 <small>点按切换并试听</small></p>
+    <div class="ipa-word-list" id="ipa-word-list" role="group" aria-label="例词列表"></div>
     <div class="ipa-detail-actions">
       <button class="btn btn-primary ipa-play-btn" type="button" data-action="ipa-play">听例词</button>
       <button class="btn btn-ghost ipa-slow-btn" type="button" data-action="ipa-slow">0.7× 慢速</button>
@@ -4010,7 +4086,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   const ipaPhonemes = IPA_DATA.phonemes;
   const ipaById = new Map(ipaPhonemes.map(item => [item.id, item]));
   const ipaProgress = loadIpaProgress();
-  const ipaState = { filter: "all", currentId: null };
+  const ipaState = { filter: "all", currentId: null, wordIndex: 0 };
 
   const state = {
     view: "home",
@@ -5640,6 +5716,15 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     renderIpa();
   }
 
+  function ipaWords(item) {
+    if (item && Array.isArray(item.words) && item.words.length) return item.words;
+    return item ? [{ w: item.word, hl: item.highlight || "", cn: item.cn || "" }] : [];
+  }
+
+  function ipaWordSlug(entry) {
+    return String(entry && entry.w || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  }
+
   function ipaWordMarkup(item) {
     const word = escapeHTML(item.word);
     const mark = escapeHTML(item.highlight || "");
@@ -5657,7 +5742,10 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
         <span class="ipa-card-check" aria-hidden="true">✓</span>
         <span class="ipa-card-sym">${escapeHTML(item.sym)}</span>
         <span class="ipa-card-word">${ipaWordMarkup(item)}</span>
-        <span class="ipa-card-cn">${escapeHTML(item.cn)}</span>
+        <span class="ipa-card-bottom">
+          <span class="ipa-card-cn">${escapeHTML(item.cn)}</span>
+          <span class="ipa-card-words">${ipaWords(item).length} 词</span>
+        </span>
       </button>
     `;
   }
@@ -5715,16 +5803,32 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     }
     const voice = $("#ipa-detail-voice");
     if (voice) voice.textContent = item.voiced ? "浊音 · VOICED" : "清音 · VOICELESS";
+    const words = ipaWords(item);
+    if (ipaState.wordIndex >= words.length) ipaState.wordIndex = 0;
+    const entry = words[ipaState.wordIndex] || words[0];
     const word = $("#ipa-detail-word");
-    if (word) word.innerHTML = ipaWordMarkup(item);
+    if (word) word.innerHTML = ipaWordMarkup({ word: entry.w, highlight: entry.hl });
     const cn = $("#ipa-detail-cn");
-    if (cn) cn.textContent = item.cn;
+    if (cn) cn.textContent = entry.cn;
     const tip = $("#ipa-detail-tip");
     if (tip) tip.textContent = item.tip;
     const spell = $("#ipa-detail-spell");
     if (spell) spell.textContent = item.spell;
     const noteWord = $("#ipa-detail-note-word");
-    if (noteWord) noteWord.textContent = item.word;
+    if (noteWord) noteWord.textContent = entry.w;
+    const wordList = $("#ipa-word-list");
+    if (wordList) {
+      wordList.innerHTML = words.map((entry, index) => {
+        const active = index === ipaState.wordIndex;
+        return `
+          <button class="ipa-word-chip${active ? " is-active" : ""}" type="button"
+            data-action="ipa-word" data-index="${index}" aria-pressed="${active ? "true" : "false"}">
+            <span class="ipa-word-chip-word">${ipaWordMarkup({ word: entry.w, highlight: entry.hl })}</span>
+            <span class="ipa-word-chip-cn">${escapeHTML(entry.cn)}</span>
+          </button>
+        `;
+      }).join("");
+    }
     const learned = ipaProgress.has(item.id);
     const button = $("#ipa-learn-btn");
     if (button) {
@@ -5734,16 +5838,22 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     }
   }
 
-  function playIpa(id, rate = 1, mode = "ipa") {
+  function playIpa(id, rate = 1, mode = "ipa", wordIndex = ipaState.wordIndex) {
     const item = ipaById.get(id);
     if (!item) return;
-    playClip(`audio/ipa/${item.id}.mp3`, {
+    const words = ipaWords(item);
+    const index = Math.min(Math.max(0, Number(wordIndex) || 0), words.length - 1);
+    const entry = words[index];
+    const src = index === 0
+      ? `audio/ipa/${item.id}.mp3`
+      : `audio/ipa/words/${ipaWordSlug(entry)}.mp3`;
+    playClip(src, {
       rate,
       mode,
       lang: "en-GB",
-      fallback: item.word
+      fallback: entry.w
     });
-    setLive(`播放例词：${item.word}`);
+    setLive(`播放例词：${entry.w}`);
   }
 
   function openIpaDetail(id) {
@@ -5751,6 +5861,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     if (!item) return;
     lastFocused = document.activeElement;
     ipaState.currentId = id;
+    ipaState.wordIndex = 0;
     renderIpaDetail();
     ipaModal.hidden = false;
     app.inert = true;
@@ -5788,6 +5899,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     if (current < 0) return;
     const next = (current + delta + ipaPhonemes.length) % ipaPhonemes.length;
     ipaState.currentId = ipaPhonemes[next].id;
+    ipaState.wordIndex = 0;
     renderIpaDetail();
     playIpa(ipaState.currentId, 1, "ipa");
   }
@@ -6419,6 +6531,17 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     }
     if (action === "ipa-slow") {
       if (ipaState.currentId) playIpa(ipaState.currentId, 0.7, "ipa-slow");
+      return;
+    }
+    if (action === "ipa-word") {
+      const wordIndex = Number(actionNode.dataset.index);
+      if (Number.isInteger(wordIndex)) {
+        ipaState.wordIndex = wordIndex;
+        renderIpaDetail();
+        const chip = ipaModal.querySelector(`.ipa-word-chip[data-index="${wordIndex}"]`);
+        if (chip) chip.focus({ preventScroll: true });
+        if (ipaState.currentId) playIpa(ipaState.currentId, 1, "ipa");
+      }
       return;
     }
     if (action === "ipa-toggle") { toggleIpaLearned(); return; }
