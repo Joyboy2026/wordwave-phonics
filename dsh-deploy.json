@@ -1,7 +1,7 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-25-pwa.4",
-  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词），手机端纯静态站点",
+  "version": "2026-11-25-pwa.5",
+  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词）+ 拍照 OCR 读英文，手机端纯静态站点",
   "entrypoint": "index.html",
   "server": {
     "cwd": ".",
@@ -27,7 +27,10 @@
     "ipaPhonemes": 48,
     "ipaAudioFiles": 48,
     "ipaWords": 240,
-    "ipaWordAudioFiles": 163
+    "ipaWordAudioFiles": 163,
+    "ocrDictEntries": 57841,
+    "ocrFormEntries": 32412,
+    "ocrEngineFiles": 6
   },
   "checks": [
     "test -f index.html",
@@ -47,21 +50,32 @@
     "find audio/ipa -maxdepth 1 -type f | wc -l  # 48",
     "find audio/ipa/words -type f | wc -l  # 163",
     "curl -fsS http://127.0.0.1:8765/audio/ipa/ae.mp3 -o /dev/null",
-    "curl -fsS http://127.0.0.1:8765/audio/ipa/words/fish.mp3 -o /dev/null"
+    "curl -fsS http://127.0.0.1:8765/audio/ipa/words/fish.mp3 -o /dev/null",
+    "test -f ocr-dict.json",
+    "test -f ocr-forms.json",
+    "test -f vendor/tesseract/tesseract.min.js",
+    "test -f vendor/tesseract/worker.min.js",
+    "test -f vendor/tesseract/tesseract-core-simd-lstm.wasm.js",
+    "test -f vendor/tesseract/lang/eng.traineddata.gz",
+    "find vendor/tesseract -type f | wc -l  # 6"
   ],
   "storageKeys": [
     "wordwave.progress.v1",
     "wordwave.wordlab.v1",
     "wordwave.zoom.v1",
     "wordwave.ipa.v1",
-    "wordwave.browse.v1"
+    "wordwave.browse.v1",
+    "wordwave.ocr.v1"
   ],
   "doNotModify": [
     "data.js",
     "lab.js",
     "ipa.js",
     "audio/",
-    "index.html"
+    "index.html",
+    "ocr-dict.json",
+    "ocr-forms.json",
+    "vendor/"
   ],
   "doNotCopy": [
     ".oil-ui/",

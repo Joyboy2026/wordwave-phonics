@@ -3684,6 +3684,295 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   .ipa-modal-card h2 { font-size: 32px; }
 }
 
+/* ---------- PHOTO OCR / 拍照读英文 ---------- */
+.ocr-banner {
+  background: linear-gradient(100deg, var(--card) 0%, #fff0d8 100%);
+}
+.ocr-stamp {
+  background: var(--coral);
+  color: var(--ink);
+}
+.ocr-banner .eyebrow::before { background: var(--coral); }
+.ocr-banner .lab-banner-copy strong { text-wrap: balance; }
+.ocr-banner .lab-banner-cta { background: var(--blue); color: #fff; }
+.ocr-banner .lab-banner-progress { color: var(--coral); }
+.sub-chip i.ocr-chip-dot { background: var(--coral); }
+
+.ocr-main { width: min(100% - 2 * var(--pad), 860px); }
+.ocr-title { font-size: clamp(42px, 9vw, 76px); text-wrap: balance; }
+.ocr-guide-panel { align-self: start; }
+.ocr-guide-list {
+  display: grid;
+  gap: 7px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ocr-guide-list li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  color: #ddd8ca;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ocr-guide-list b {
+  color: var(--lime);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.ocr-guide-note {
+  margin: 12px 0 0 !important;
+  color: #a9a396 !important;
+  font-size: 10.5px !important;
+  line-height: 1.5;
+}
+
+.ocr-panel {
+  margin: 0 0 18px;
+  padding: 17px 18px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.ocr-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ocr-panel-head .eyebrow { margin-bottom: 3px; }
+.ocr-panel-head h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.ocr-step-badge {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.ocr-step-badge.is-ready { background: var(--lime); }
+.ocr-step-badge.is-busy { background: var(--blue-soft); }
+
+.ocr-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 14px;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  background: var(--paper);
+  text-align: center;
+}
+.ocr-camera { font-size: 30px; line-height: 1; }
+.ocr-dropzone strong { font-size: 15px; font-weight: 900; }
+.ocr-dropzone p { margin: 0; color: var(--muted); font-size: 11.5px; line-height: 1.5; }
+.ocr-pick-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 5px; }
+.ocr-pick-actions .btn { min-height: 40px; padding: 0 14px; font-size: 13px; }
+.ocr-file-hint { color: var(--muted); font-family: var(--mono); font-size: 9px; margin-top: 2px; }
+.ocr-preview-wrap { margin-top: 12px; }
+.ocr-preview {
+  display: block;
+  width: 100%;
+  max-height: 270px;
+  object-fit: contain;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #191919;
+}
+.ocr-preview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9.5px;
+}
+.ocr-link {
+  border: 0;
+  background: none;
+  color: var(--blue);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px;
+}
+.ocr-runbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+.ocr-runbar .btn { min-height: 44px; padding: 0 16px; }
+.ocr-status { color: var(--muted); font-size: 11px; line-height: 1.4; }
+.ocr-status.is-error { color: #a9341e; font-weight: 700; }
+.ocr-progress {
+  height: 7px;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+}
+.ocr-progress i { display: block; width: 0; height: 100%; background: var(--coral); transition: width 180ms ease; }
+
+.ocr-textarea {
+  display: block;
+  width: 100%;
+  min-height: 156px;
+  padding: 11px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #fffdf7;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.65;
+  resize: vertical;
+}
+.ocr-textarea:focus { outline: 3px solid var(--blue); outline-offset: 1px; }
+.ocr-text-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+}
+.ocr-small-btn { min-height: 30px !important; padding: 0 9px !important; font-size: 10.5px !important; }
+.ocr-save-hint { color: var(--muted); font-family: var(--mono); font-size: 9px; }
+.ocr-readbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--line);
+}
+.ocr-read-btn { min-height: 42px; padding: 0 14px; }
+.ocr-read-btn.is-playing { background: var(--blue); }
+.ocr-rate-label, .ocr-auto-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.ocr-rate-label select {
+  min-height: 32px;
+  padding: 0 6px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  background: var(--card);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+}
+.ocr-auto-label input { width: 15px; height: 15px; accent-color: var(--coral); }
+.ocr-voice-note { margin: 8px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+
+.ocr-words { display: flex; flex-wrap: wrap; gap: 6px; }
+.ocr-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 31px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.ocr-word:hover { background: var(--blue-soft); }
+.ocr-word.is-new { background: var(--lime); }
+.ocr-word .ocr-word-star { color: #6b3b00; font-size: 9px; }
+.ocr-empty { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.ocr-new-panel { background: #fbfff0; }
+.ocr-new-words { margin-bottom: 2px; }
+
+
+.ocr-word-card {
+  width: min(430px, 100%);
+  padding: 20px 20px 18px;
+}
+.ocr-word-card h2 {
+  margin: 0 0 2px;
+  font-family: var(--display);
+  font-size: clamp(32px, 9vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+.ocr-word-phonetic {
+  min-height: 18px;
+  margin: 0;
+  color: var(--blue);
+  font-family: "DejaVu Sans", "Noto Sans", "Segoe UI", var(--body);
+  font-size: 16px;
+  font-weight: 700;
+}
+.ocr-word-translation {
+  margin: 8px 0 0;
+  padding: 9px 10px;
+  border-left: 4px solid var(--coral);
+  border-radius: 0 8px 8px 0;
+  background: var(--coral-soft);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+.ocr-word-base { margin: 7px 0 0; color: var(--muted); font-size: 10.5px; }
+.ocr-word-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 13px;
+}
+.ocr-word-actions .btn { min-height: 42px; padding: 0 8px; font-size: 12px; }
+.ocr-word-actions .btn.is-marked { background: var(--lime); }
+.ocr-word-hint { margin: 8px 0 0; color: var(--muted); font-size: 9.5px; line-height: 1.45; }
+body[data-view="ocr"] .zoom-fab { top: 18%; }
+body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
+
+@media (max-width: 700px) {
+  .ocr-main { width: min(100% - 24px, 860px); padding-top: 18px; }
+  .ocr-title { font-size: clamp(38px, 10.5vw, 56px); }
+  .ocr-panel { padding: 14px 13px 15px; border-radius: 15px; }
+  .ocr-panel-head h2 { font-size: 18px; }
+  .ocr-preview { max-height: 230px; }
+  .ocr-textarea { min-height: 138px; font-size: 14px; }
+  .ocr-word { font-size: 13px; min-height: 29px; }
+}
+@media (max-width: 380px) {
+  .ocr-word-actions { grid-template-columns: 1fr; }
+  .ocr-readbar { align-items: stretch; flex-direction: column; }
+  .ocr-read-btn { width: 100%; }
+  .ocr-rate-label { justify-content: space-between; }
+  .ocr-textarea { min-height: 120px; }
+}
+
+
 </style>
 </head>
 <body>
@@ -3786,6 +4075,17 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
         <span class="lab-banner-cta">进入音标室 <b aria-hidden="true">→</b></span>
       </a>
 
+      <a class="lab-banner ocr-banner" href="#/ocr" aria-label="进入拍照识别英文模块">
+        <span class="lab-stamp ocr-stamp" aria-hidden="true">OCR<br>拍照</span>
+        <span class="lab-banner-copy">
+          <span class="eyebrow">NEW · 拍照读英文</span>
+          <strong>拍下来，读出声。</strong>
+          <span>OCR 识别 · 文字可编辑 · 倍速朗读 · 点词听音查义 · 生词本</span>
+          <span class="lab-banner-progress" id="ocr-banner-progress">生词 0 个</span>
+        </span>
+        <span class="lab-banner-cta">进入拍照识别 <b aria-hidden="true">→</b></span>
+      </a>
+
       <section class="channels" id="channels" aria-labelledby="channels-title">
         <div class="section-head">
           <div>
@@ -3862,6 +4162,115 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
         <span class="ipa-hint">点击卡片听例词 · 音标本身不单独发音</span>
       </div>
       <div id="ipa-groups"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-ocr" hidden>
+    <header class="subbar">
+      <div class="subbar-inner">
+        <button class="back-btn" type="button" data-action="ocr-home" aria-label="返回首页">← <span>首页</span></button>
+        <div class="subbar-center"><span class="sub-chip"><i class="ocr-chip-dot"></i><span>OCR · 拍照读英文</span></span></div>
+        <span class="lab-count-chip" id="ocr-count-chip">生词 0</span>
+      </div>
+    </header>
+    <div class="lab-main ocr-main" id="ocr-main" tabindex="-1">
+      <div class="lab-home-head ocr-home-head">
+        <div>
+          <p class="eyebrow">PHOTO READER · OCR</p>
+          <h1 class="lab-title ocr-title"><span class="hl">拍下来，</span><span class="tail">读出声。</span></h1>
+          <p class="lab-lede">拍一张英文书页或练习纸，识别成可编辑的英文；自动朗读，点任意单词听发音、看音标和中文释义，生词随手标记。</p>
+          <div class="lab-stats">
+            <span class="lab-stat"><b>离线</b> 识别</span>
+            <span class="lab-stat"><b>倍速</b> 朗读</span>
+            <span class="lab-stat"><b>点词</b> 查义</span>
+          </div>
+        </div>
+        <div class="lab-progress-panel ocr-guide-panel">
+          <p class="eyebrow">HOW IT WORKS</p>
+          <ol class="ocr-guide-list">
+            <li><b>01</b> 拍照或从相册选图</li>
+            <li><b>02</b> 识别后可修改文字</li>
+            <li><b>03</b> 点词听音、查义、标生词</li>
+          </ol>
+          <p class="ocr-guide-note">照片只在浏览器本地识别，不会上传。</p>
+        </div>
+      </div>
+
+      <section class="ocr-panel" aria-labelledby="ocr-photo-title">
+        <div class="ocr-panel-head">
+          <div><p class="eyebrow">STEP 01 · PHOTO</p><h2 id="ocr-photo-title">先拍一张英文</h2></div>
+          <span class="ocr-step-badge" id="ocr-photo-badge">待选择</span>
+        </div>
+        <div class="ocr-dropzone" id="ocr-dropzone">
+          <span class="ocr-camera" aria-hidden="true">📷</span>
+          <strong>拍照，或从相册选一张</strong>
+          <p>尽量正对书页、光线充足；识别英文效果最好。</p>
+          <div class="ocr-pick-actions">
+            <button class="btn btn-primary" type="button" data-action="ocr-camera">拍照</button>
+            <button class="btn btn-ghost" type="button" data-action="ocr-upload">从相册选</button>
+          </div>
+          <span class="ocr-file-hint">支持 JPG / PNG / WebP · 图片只在本地处理</span>
+          <input type="file" id="ocr-camera-input" accept="image/*" capture="environment" hidden>
+          <input type="file" id="ocr-upload-input" accept="image/*" hidden>
+        </div>
+        <div class="ocr-preview-wrap" id="ocr-preview-wrap" hidden>
+          <img class="ocr-preview" id="ocr-preview" alt="待识别的英文照片">
+          <div class="ocr-preview-bar">
+            <span id="ocr-image-name">已选图片</span>
+            <button class="ocr-link" type="button" data-action="ocr-clear-image">换一张</button>
+          </div>
+        </div>
+        <div class="ocr-runbar">
+          <button class="btn btn-primary" type="button" data-action="ocr-run" id="ocr-run" disabled>开始识别</button>
+          <span class="ocr-status" id="ocr-status" role="status" aria-live="polite">先拍照或选图</span>
+        </div>
+        <div class="ocr-progress" id="ocr-progress" hidden><i id="ocr-progress-fill"></i></div>
+      </section>
+
+      <section class="ocr-panel" id="ocr-text-panel" aria-labelledby="ocr-text-title">
+        <div class="ocr-panel-head">
+          <div><p class="eyebrow">STEP 02 · TEXT</p><h2 id="ocr-text-title">识别文字，可修改</h2></div>
+          <span class="ocr-step-badge" id="ocr-word-count">0 个词</span>
+        </div>
+        <label class="sr-only" for="ocr-text">识别出的英文文字</label>
+        <textarea class="ocr-textarea" id="ocr-text" rows="7" spellcheck="false" placeholder="识别出的英文会出现在这里，也可以直接粘贴或输入。"></textarea>
+        <div class="ocr-text-actions">
+          <button class="btn btn-ghost ocr-small-btn" type="button" data-action="ocr-clear-text">清空文字</button>
+          <span class="ocr-save-hint" id="ocr-save-hint">修改会自动保存</span>
+        </div>
+        <div class="ocr-readbar">
+          <button class="btn btn-primary ocr-read-btn" type="button" data-action="ocr-read" id="ocr-read">▶ 朗读全文</button>
+          <label class="ocr-rate-label">朗读速度
+            <select id="ocr-rate" aria-label="朗读速度">
+              <option value="0.7">0.7×</option>
+              <option value="0.85">0.85×</option>
+              <option value="1" selected>1.0×</option>
+              <option value="1.15">1.15×</option>
+              <option value="1.3">1.3×</option>
+            </select>
+          </label>
+          <label class="ocr-auto-label"><input type="checkbox" id="ocr-auto" checked> 识别后自动朗读</label>
+        </div>
+        <p class="ocr-voice-note" id="ocr-voice-note">朗读优先使用设备语音；没有英文语音包时会用在线逐词朗读（需联网）。</p>
+      </section>
+
+      <section class="ocr-panel" id="ocr-words-panel" aria-labelledby="ocr-words-title">
+        <div class="ocr-panel-head">
+          <div><p class="eyebrow">STEP 03 · WORDS</p><h2 id="ocr-words-title">点一个词</h2></div>
+          <span class="ocr-step-badge">听音 · 音标 · 释义</span>
+        </div>
+        <div class="ocr-words" id="ocr-words"></div>
+        <p class="ocr-empty" id="ocr-words-empty">识别文字后，这里会列出每个可点的单词。</p>
+      </section>
+
+      <section class="ocr-panel ocr-new-panel" id="ocr-new-panel" aria-labelledby="ocr-new-title">
+        <div class="ocr-panel-head">
+          <div><p class="eyebrow">MY WORDS</p><h2 id="ocr-new-title">生词本</h2></div>
+          <span class="ocr-step-badge" id="ocr-new-count">0 个</span>
+        </div>
+        <div class="ocr-words ocr-new-words" id="ocr-new-words"></div>
+        <p class="ocr-empty" id="ocr-new-empty">在单词卡里点“标记生词”，就会收进这里。</p>
+      </section>
     </div>
   </section>
 
@@ -3955,6 +4364,22 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   </div>
 </div>
 
+<div class="modal" id="ocr-word-modal" hidden>
+  <div class="modal-card ocr-word-card" role="dialog" aria-modal="true" aria-labelledby="ocr-word-title">
+    <button class="close-x" type="button" data-action="close-ocr-word" aria-label="关闭单词卡">×</button>
+    <p class="eyebrow" id="ocr-word-type">WORD LOOKUP</p>
+    <h2 id="ocr-word-title">word</h2>
+    <p class="ocr-word-phonetic" id="ocr-word-phonetic"></p>
+    <p class="ocr-word-translation" id="ocr-word-translation"></p>
+    <p class="ocr-word-base" id="ocr-word-base" hidden></p>
+    <div class="ocr-word-actions">
+      <button class="btn btn-primary" type="button" data-action="ocr-speak-word" id="ocr-speak-word">🔊 听发音</button>
+      <button class="btn btn-ghost" type="button" data-action="ocr-mark-word" id="ocr-mark-word" aria-pressed="false">☆ 标记生词</button>
+    </div>
+    <p class="ocr-word-hint" id="ocr-word-hint">发音优先用本地音频，其次用设备语音或在线发音。</p>
+  </div>
+</div>
+
 <div class="celebration" id="celebration" hidden>
   <canvas id="confetti" aria-hidden="true"></canvas>
   <div class="celebration-card" role="dialog" aria-modal="true" aria-labelledby="win-title">
@@ -4038,6 +4463,9 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   const ipaView = $("#view-ipa");
   const ipaMain = $("#ipa-main");
   const ipaModal = $("#ipa-modal");
+  const ocrView = $("#view-ocr");
+  const ocrMain = $("#ocr-main");
+  const ocrWordModal = $("#ocr-word-modal");
   const labWin = $("#lab-win");
   const labConfetti = $("#lab-confetti");
   const burstCanvas = $("#burst-confetti");
@@ -4096,6 +4524,43 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   const ipaById = new Map(ipaPhonemes.map(item => [item.id, item]));
   const ipaProgress = loadIpaProgress();
   const ipaState = { filter: "all", currentId: null, wordIndex: 0 };
+
+  const OCR_KEY = "wordwave.ocr.v1";
+  const OCR_RATES = [0.7, 0.85, 1, 1.15, 1.3];
+  const OCR_MAX_IMAGE = 1800;
+  const OCR_DICT_URL = "ocr-dict.json";
+  const OCR_FORMS_URL = "ocr-forms.json";
+  const OCR_YOUDAO = "https://dict.youdao.com/dictvoice?audio=";
+  const ocrState = {
+    text: "",
+    rate: 1,
+    autoRead: true,
+    newWords: new Set(),
+    imageBlob: null,
+    imageName: "",
+    previewUrl: "",
+    words: [],
+    dict: null,
+    forms: null,
+    dictError: false,
+    dictPromise: null,
+    worker: null,
+    workerPromise: null,
+    tesseractPromise: null,
+    busy: false,
+    speaking: false,
+    speakToken: 0,
+    wordPlaying: false,
+    wordToken: 0,
+    currentWord: "",
+    currentLookup: null,
+    audio: null,
+    audioResolve: null,
+    saveTimer: 0,
+    inputTimer: 0
+  };
+  let ocrLastFocused = null;
+  const ocrAudioMap = buildOcrAudioMap();
 
   const state = {
     view: "home",
@@ -4785,7 +5250,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   }
 
   function overlayOpen() {
-    return !howModal.hidden || !celebration.hidden || !labWin.hidden || !ipaModal.hidden;
+    return !howModal.hidden || !celebration.hidden || !labWin.hidden || !ipaModal.hidden || !ocrWordModal.hidden;
   }
 
   function syncZoomChrome() {
@@ -4829,6 +5294,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     pageZoom = Math.round(clampZoom(value) * 10) / 10;
     app.style.zoom = String(pageZoom);
     document.body.classList.toggle("is-zoomed", pageZoom >= ZOOM_HEADER_TRIM_AT);
+    document.body.classList.toggle("is-zoomed-out", pageZoom < 0.999);
     if (options.persist !== false) {
       try { window.localStorage.setItem(ZOOM_KEY, String(pageZoom)); } catch (error) {}
     }
@@ -4947,6 +5413,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     quizView.hidden = view !== "quiz";
     labView.hidden = view !== "words";
     ipaView.hidden = view !== "ipa";
+    ocrView.hidden = view !== "ocr";
   }
 
   function jumpScroll(top) {
@@ -5038,6 +5505,8 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     if (previousKey && !sameKey) saveCurrentBrowsePosition();
     activeBrowseKey = null;
     browseSaveBlocked = true;
+    if (!ocrWordModal.hidden) closeOcrWord(false);
+    stopOcrSpeech();
     if (hash === "#/words/study") {
       if (!labState.session.length) {
         go("#/words");
@@ -5058,6 +5527,12 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     if (hash === "#/ipa") {
       stopAudio();
       openIpaView();
+      finishRoute(newKey, sameKey);
+      return;
+    }
+    if (hash === "#/ocr") {
+      stopAudio();
+      openOcrView();
       finishRoute(newKey, sameKey);
       return;
     }
@@ -6026,6 +6501,892 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     setLive(wasLearned ? `已取消掌握 ${item.word}` : `已标记掌握 ${item.word}`);
   }
 
+  /* ---------- PHOTO OCR ---------- */
+
+  function ocrSlug(word) {
+    return String(word || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  }
+
+  function buildOcrAudioMap() {
+    const map = new Map();
+    groups.forEach(group => group.words.forEach(item => {
+      const key = String(item.word || "").toLowerCase();
+      if (key && !map.has(key)) map.set(key, `audio/words/${ocrSlug(key)}.mp3`);
+    }));
+    ipaPhonemes.forEach(item => {
+      const key = String(item.word || "").toLowerCase();
+      if (key && !map.has(key)) map.set(key, `audio/ipa/${item.id}.mp3`);
+      (item.words || []).forEach(entry => {
+        const word = String(entry.w || "").toLowerCase();
+        if (word && !map.has(word)) map.set(word, `audio/ipa/words/${ocrSlug(word)}.mp3`);
+      });
+    });
+    return map;
+  }
+
+  function ocrNormalizeWord(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[’]/g, "'")
+      .replace(/^[^a-z']+|[^a-z']+$/g, "");
+  }
+
+  function ocrParseWords(text) {
+    const matches = String(text || "").match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || [];
+    const seen = new Set();
+    const words = [];
+    matches.forEach(match => {
+      const word = ocrNormalizeWord(match);
+      if (!word || word.length > 40 || seen.has(word)) return;
+      seen.add(word);
+      words.push(word);
+    });
+    return words;
+  }
+
+  function ocrFormatPhonetic(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    const text = raw
+      .replace(/'/g, "ˈ")
+      .replace(/,/g, "ˌ")
+      .replace(/([aeiouəɜɔɑʊɪɛæʌɒ]):/g, "$1ː");
+    if (text.startsWith("/") || text.startsWith("[")) return text;
+    return `/${text}/`;
+  }
+
+  function loadOcrSettings() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(OCR_KEY) || "{}");
+      if (raw && typeof raw === "object") {
+        if (typeof raw.text === "string") ocrState.text = raw.text.slice(0, 20000);
+        if (OCR_RATES.includes(Number(raw.rate))) ocrState.rate = Number(raw.rate);
+        if (typeof raw.autoRead === "boolean") ocrState.autoRead = raw.autoRead;
+        if (Array.isArray(raw.newWords)) {
+          ocrState.newWords = new Set(raw.newWords
+            .map(value => ocrNormalizeWord(value))
+            .filter(value => value && value.length <= 40));
+        }
+      }
+    } catch (error) {}
+    const area = $("#ocr-text");
+    const rate = $("#ocr-rate");
+    const auto = $("#ocr-auto");
+    if (area) area.value = ocrState.text;
+    if (rate) rate.value = String(ocrState.rate);
+    if (auto) auto.checked = ocrState.autoRead;
+    ocrState.words = ocrParseWords(ocrState.text);
+  }
+
+  function saveOcrSettings() {
+    try {
+      localStorage.setItem(OCR_KEY, JSON.stringify({
+        text: ocrState.text,
+        rate: ocrState.rate,
+        autoRead: ocrState.autoRead,
+        newWords: Array.from(ocrState.newWords)
+      }));
+    } catch (error) {}
+  }
+
+  function scheduleOcrSave() {
+    window.clearTimeout(ocrState.saveTimer);
+    ocrState.saveTimer = window.setTimeout(saveOcrSettings, 300);
+  }
+
+  function setOcrStatus(message, isError = false) {
+    const status = $("#ocr-status");
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function setOcrPhotoBadge(message, className = "") {
+    const badge = $("#ocr-photo-badge");
+    if (!badge) return;
+    badge.textContent = message;
+    badge.classList.toggle("is-ready", className === "is-ready");
+    badge.classList.toggle("is-busy", className === "is-busy");
+  }
+
+  function setOcrProgress(value) {
+    const bar = $("#ocr-progress");
+    const fill = $("#ocr-progress-fill");
+    if (!bar || !fill) return;
+    bar.hidden = false;
+    fill.style.width = `${Math.max(0, Math.min(1, value)) * 100}%`;
+  }
+
+  function updateOcrChrome() {
+    const count = ocrState.newWords.size;
+    const chip = $("#ocr-count-chip");
+    if (chip) chip.textContent = `生词 ${count}`;
+    const banner = $("#ocr-banner-progress");
+    if (banner) banner.textContent = `生词 ${count} 个`;
+    const wordCount = $("#ocr-word-count");
+    if (wordCount) wordCount.textContent = `${ocrState.words.length} 个词`;
+    const newCount = $("#ocr-new-count");
+    if (newCount) newCount.textContent = `${count} 个`;
+    const read = $("#ocr-read");
+    if (read && !ocrState.speaking) read.disabled = !ocrState.text.trim();
+  }
+
+  function renderOcrWords() {
+    const host = $("#ocr-words");
+    const empty = $("#ocr-words-empty");
+    if (!host || !empty) return;
+    if (!ocrState.words.length) {
+      host.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+    host.innerHTML = ocrState.words.map(word => {
+      const marked = ocrState.newWords.has(word);
+      return `<button class="ocr-word${marked ? " is-new" : ""}" type="button" data-action="ocr-word" data-word="${escapeHTML(word)}" aria-label="${escapeHTML(word)}${marked ? "，已标记生词" : ""}">
+        <span>${escapeHTML(word)}</span>${marked ? '<span class="ocr-word-star" aria-hidden="true">★</span>' : ""}
+      </button>`;
+    }).join("");
+  }
+
+  function renderOcrNewWords() {
+    const host = $("#ocr-new-words");
+    const empty = $("#ocr-new-empty");
+    if (!host || !empty) return;
+    const words = Array.from(ocrState.newWords);
+    if (!words.length) {
+      host.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+    host.innerHTML = words.map(word => `
+      <button class="ocr-word is-new" type="button" data-action="ocr-word" data-word="${escapeHTML(word)}" aria-label="${escapeHTML(word)}，生词">
+        <span>${escapeHTML(word)}</span><span class="ocr-word-star" aria-hidden="true">★</span>
+      </button>
+    `).join("");
+  }
+
+  function renderOcrAll() {
+    renderOcrWords();
+    renderOcrNewWords();
+    updateOcrChrome();
+  }
+
+  function setOcrText(text, options = {}) {
+    ocrState.text = String(text || "").slice(0, 20000);
+    const area = $("#ocr-text");
+    if (area && area.value !== ocrState.text) area.value = ocrState.text;
+    ocrState.words = ocrParseWords(ocrState.text);
+    renderOcrAll();
+    if (options.save !== false) scheduleOcrSave();
+  }
+
+  function ocrEnglishVoices() {
+    try {
+      return (window.speechSynthesis.getVoices() || [])
+        .filter(voice => /^en([-_]|$)/i.test(voice.lang || ""));
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function updateOcrVoiceNote() {
+    const note = $("#ocr-voice-note");
+    if (!note) return;
+    const voices = ocrEnglishVoices();
+    note.textContent = voices.length
+      ? "设备英文语音已就绪；朗读和单词发音会优先使用它。"
+      : "没有检测到设备英文语音，朗读会改用本地/在线逐词发音（需联网）。";
+  }
+
+  function setOcrReadUI() {
+    const button = $("#ocr-read");
+    if (!button) return;
+    button.textContent = ocrState.speaking ? "■ 停止朗读" : "▶ 朗读全文";
+    button.classList.toggle("is-playing", ocrState.speaking);
+    button.disabled = !ocrState.speaking && !ocrState.text.trim();
+  }
+
+  function stopOcrAudioOnly() {
+    if (ocrState.audio) {
+      try { ocrState.audio.pause(); } catch (error) {}
+      ocrState.audio = null;
+    }
+    if (ocrState.audioResolve) {
+      const finish = ocrState.audioResolve;
+      ocrState.audioResolve = null;
+      finish(false);
+    }
+  }
+
+  function stopOcrSpeech() {
+    ocrState.speakToken += 1;
+    ocrState.speaking = false;
+    try {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    } catch (error) {}
+    stopOcrAudioOnly();
+    setOcrReadUI();
+  }
+
+  function stopOcrWordAudio() {
+    ocrState.wordToken += 1;
+    ocrState.wordPlaying = false;
+    try {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    } catch (error) {}
+    stopOcrAudioOnly();
+    if (!ocrWordModal.hidden) renderOcrWordDetail();
+  }
+
+  function playOcrAudio(src, rate) {
+    return new Promise(resolve => {
+      if (!src) {
+        resolve(false);
+        return;
+      }
+      stopOcrAudioOnly();
+      const audio = new Audio();
+      ocrState.audio = audio;
+      let done = false;
+      const finish = ok => {
+        if (done) return;
+        done = true;
+        if (ocrState.audio === audio) ocrState.audio = null;
+        if (ocrState.audioResolve === finish) ocrState.audioResolve = null;
+        resolve(ok);
+      };
+      ocrState.audioResolve = finish;
+      audio.preload = "auto";
+      audio.src = src;
+      audio.playbackRate = Math.max(0.5, Math.min(1.5, Number(rate) || 1));
+      audio.onended = () => finish(true);
+      audio.onerror = () => finish(false);
+      const timer = window.setTimeout(() => finish(false), 9000);
+      audio.addEventListener("ended", () => window.clearTimeout(timer), { once: true });
+      audio.addEventListener("error", () => window.clearTimeout(timer), { once: true });
+      audio.play().catch(() => finish(false));
+    });
+  }
+
+  function speakOcrTts(text, rate) {
+    return new Promise(resolve => {
+      if (!text || !("speechSynthesis" in window)) {
+        resolve(false);
+        return;
+      }
+      const voices = ocrEnglishVoices();
+      if (!voices.length) {
+        resolve(false);
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voice = voices.find(item => /^en-GB/i.test(item.lang))
+          || voices.find(item => /^en-US/i.test(item.lang))
+          || voices[0];
+        if (voice) utterance.voice = voice;
+        utterance.lang = voice ? voice.lang : "en-GB";
+        utterance.rate = Math.max(0.5, Math.min(1.5, Number(rate) || 1));
+        utterance.pitch = 1;
+        let done = false;
+        const finish = ok => {
+          if (done) return;
+          done = true;
+          resolve(ok);
+        };
+        utterance.onend = () => finish(true);
+        utterance.onerror = () => finish(false);
+        window.speechSynthesis.speak(utterance);
+        window.setTimeout(() => finish(false), Math.max(5000, text.length * 260));
+      } catch (error) {
+        resolve(false);
+      }
+    });
+  }
+
+  function ocrYoudaoUrl(word) {
+    return `${OCR_YOUDAO}${encodeURIComponent(word)}&type=2`;
+  }
+
+  function splitOcrChunks(text, max = 180) {
+    const cleaned = String(text || "").replace(/\s+/g, " ").trim();
+    if (!cleaned) return [];
+    const sentences = cleaned.match(/[^.!?。！？]+[.!?。！？]?/g) || [cleaned];
+    const chunks = [];
+    let current = "";
+    sentences.forEach(sentence => {
+      const parts = sentence.length > max ? sentence.split(/(?=\s)/) : [sentence];
+      parts.forEach(part => {
+        if (!part) return;
+        if ((current + part).length > max && current) {
+          chunks.push(current.trim());
+          current = "";
+        }
+        if (part.length > max) {
+          for (let index = 0; index < part.length; index += max) {
+            chunks.push(part.slice(index, index + max).trim());
+          }
+        } else {
+          current += part;
+        }
+      });
+    });
+    if (current.trim()) chunks.push(current.trim());
+    return chunks.filter(Boolean);
+  }
+
+  async function readOcrTextTts(text, token) {
+    const chunks = splitOcrChunks(text);
+    for (const chunk of chunks) {
+      if (token !== ocrState.speakToken) return;
+      await speakOcrTts(chunk, ocrState.rate);
+    }
+  }
+
+  async function readOcrTextFallback(text, token) {
+    const tokens = String(text || "").match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[.!?;:,]/g) || [];
+    let failures = 0;
+    for (const tokenText of tokens) {
+      if (token !== ocrState.speakToken) return;
+      if (/^[A-Za-z]/.test(tokenText)) {
+        const word = ocrNormalizeWord(tokenText);
+        const source = ocrAudioMap.get(word) || ocrYoudaoUrl(word);
+        const ok = await playOcrAudio(source, ocrState.rate);
+        if (token !== ocrState.speakToken) return;
+        if (!ok) failures += 1;
+        await new Promise(resolve => window.setTimeout(resolve, 80));
+      } else {
+        await new Promise(resolve => window.setTimeout(resolve, /[.!?]/.test(tokenText) ? 220 : 90));
+      }
+      if (failures > 4) {
+        toast("在线发音暂时不可用，请检查网络或安装英文语音包");
+        return;
+      }
+    }
+  }
+
+  async function startOcrRead() {
+    if (ocrState.speaking) {
+      stopOcrSpeech();
+      return;
+    }
+    const text = String(ocrState.text || "").trim();
+    if (!text) {
+      toast("先识别或输入一些英文");
+      return;
+    }
+    stopOcrWordAudio();
+    const token = ++ocrState.speakToken;
+    ocrState.speaking = true;
+    setOcrReadUI();
+    const voices = ocrEnglishVoices();
+    if (voices.length) await readOcrTextTts(text, token);
+    else await readOcrTextFallback(text, token);
+    if (token !== ocrState.speakToken) return;
+    ocrState.speaking = false;
+    setOcrReadUI();
+  }
+
+
+  async function ensureOcrDictionary() {
+    if (ocrState.dict) return ocrState.dict;
+    if (ocrState.dictPromise) return ocrState.dictPromise;
+    ocrState.dictPromise = Promise.all([
+      fetch(OCR_DICT_URL, { cache: "force-cache" }).then(response => {
+        if (!response.ok) throw new Error(`dict ${response.status}`);
+        return response.json();
+      }),
+      fetch(OCR_FORMS_URL, { cache: "force-cache" })
+        .then(response => response.ok ? response.json() : {})
+        .catch(() => ({}))
+    ]).then(([rows, forms]) => {
+      const dict = new Map();
+      (Array.isArray(rows) ? rows : []).forEach(row => {
+        if (!Array.isArray(row) || !row[0]) return;
+        const word = String(row[0]).toLowerCase();
+        dict.set(word, {
+          word,
+          phonetic: row[1] || "",
+          translation: row[2] || ""
+        });
+      });
+      const formMap = new Map();
+      if (forms && typeof forms === "object") {
+        Object.entries(forms).forEach(([key, value]) => {
+          if (key && value) formMap.set(String(key).toLowerCase(), String(value).toLowerCase());
+        });
+      }
+      ocrState.dict = dict;
+      ocrState.forms = formMap;
+      ocrState.dictError = false;
+      return dict;
+    }).catch(error => {
+      ocrState.dictError = true;
+      ocrState.dictPromise = null;
+      throw error;
+    });
+    return ocrState.dictPromise;
+  }
+
+  function ocrGuessBase(word) {
+    const dict = ocrState.dict;
+    if (!dict) return "";
+    const rules = [
+      [/ies$/, "y"],
+      [/ing$/, ""],
+      [/ing$/, "e"],
+      [/ed$/, ""],
+      [/ed$/, "e"],
+      [/es$/, ""],
+      [/s$/, ""],
+      [/'s$/, ""]
+    ];
+    for (const [pattern, suffix] of rules) {
+      if (!pattern.test(word)) continue;
+      const base = word.replace(pattern, suffix);
+      if (base.length > 1 && dict.has(base)) return base;
+    }
+    return "";
+  }
+
+  function ocrLookup(word) {
+    const key = ocrNormalizeWord(word);
+    if (!key) return null;
+    const app = wordByWord.get(key);
+    if (app) {
+      return {
+        word: key,
+        display: app.word || key,
+        phonetic: app.ipa || "",
+        translation: app.cn || "",
+        base: app.word || key,
+        source: "app"
+      };
+    }
+    const dict = ocrState.dict;
+    if (!dict) return null;
+    const direct = dict.get(key);
+    if (direct) return { ...direct, word: key, base: key, source: "dict" };
+    const base = (ocrState.forms && ocrState.forms.get(key)) || ocrGuessBase(key);
+    if (base) {
+      const entry = dict.get(base);
+      if (entry) return { ...entry, word: key, base, source: "dict" };
+    }
+    return null;
+  }
+
+  function renderOcrWordDetail() {
+    const word = ocrState.currentWord;
+    if (!word) return;
+    const lookup = ocrState.currentLookup;
+    const title = $("#ocr-word-title");
+    const phonetic = $("#ocr-word-phonetic");
+    const translation = $("#ocr-word-translation");
+    const base = $("#ocr-word-base");
+    const type = $("#ocr-word-type");
+    const mark = $("#ocr-mark-word");
+    const speak = $("#ocr-speak-word");
+    if (title) title.textContent = word;
+    if (type) type.textContent = lookup ? (lookup.source === "app" ? "WORD · 课本词" : "WORD LOOKUP") : "WORD LOOKUP";
+    if (phonetic) phonetic.textContent = lookup
+      ? (ocrFormatPhonetic(lookup.phonetic) || "音标暂未收录")
+      : (ocrState.dict || ocrState.dictError ? "音标暂未收录" : "词典加载中…");
+    if (translation) translation.textContent = lookup
+      ? (lookup.translation || "暂未找到释义，先听发音吧。")
+      : (ocrState.dictError ? "词典暂时不可用，仍然可以听发音。" : (ocrState.dict ? "暂未找到这个词的释义，仍然可以听发音。" : "正在加载本地词典…"));
+    if (base) {
+      base.hidden = !lookup || !lookup.base || lookup.base === word;
+      base.textContent = lookup && lookup.base && lookup.base !== word ? `原形：${lookup.base}` : "";
+    }
+    if (mark) {
+      const marked = ocrState.newWords.has(word);
+      mark.textContent = marked ? "★ 已标记生词" : "☆ 标记生词";
+      mark.classList.toggle("is-marked", marked);
+      mark.setAttribute("aria-pressed", marked ? "true" : "false");
+    }
+    if (speak) {
+      speak.textContent = ocrState.wordPlaying ? "■ 停止发音" : "🔊 听发音";
+      speak.classList.toggle("is-playing", ocrState.wordPlaying);
+    }
+    const hint = $("#ocr-word-hint");
+    if (hint) {
+      hint.textContent = lookup && lookup.source === "app"
+        ? "优先使用本地录音；没有录音时会用设备语音或在线发音。"
+        : "优先使用本地录音；没有录音时会用设备语音，再退到在线发音。";
+    }
+  }
+
+  async function openOcrWord(word, trigger) {
+    const key = ocrNormalizeWord(word);
+    if (!key) return;
+    stopOcrSpeech();
+    stopOcrWordAudio();
+    ocrLastFocused = trigger || document.activeElement;
+    ocrState.currentWord = key;
+    ocrState.currentLookup = null;
+    renderOcrWordDetail();
+    ocrWordModal.hidden = false;
+    app.inert = true;
+    state.modalOpen = true;
+    document.body.classList.add("no-scroll");
+    syncZoomChrome();
+    window.setTimeout(() => {
+      const close = $("[data-action='close-ocr-word']", ocrWordModal);
+      if (close) close.focus({ preventScroll: true });
+    }, 40);
+    try {
+      await ensureOcrDictionary();
+    } catch (error) {}
+    if (ocrState.currentWord !== key || ocrWordModal.hidden) return;
+    ocrState.currentLookup = ocrLookup(key);
+    renderOcrWordDetail();
+  }
+
+  function closeOcrWord(restoreFocus = true) {
+    if (ocrWordModal.hidden) return;
+    stopOcrWordAudio();
+    stopOcrSpeech();
+    ocrWordModal.hidden = true;
+    app.inert = false;
+    state.modalOpen = false;
+    document.body.classList.remove("no-scroll");
+    let target = ocrLastFocused;
+    if (!target || !document.contains(target)) {
+      target = ocrView.querySelector(`.ocr-word[data-word="${ocrState.currentWord}"]`);
+    }
+    if (restoreFocus && target && typeof target.focus === "function") {
+      target.focus({ preventScroll: true });
+    }
+    ocrLastFocused = null;
+    syncZoomChrome();
+  }
+
+  function toggleOcrNew() {
+    const word = ocrState.currentWord;
+    if (!word) return;
+    const wasMarked = ocrState.newWords.has(word);
+    if (wasMarked) ocrState.newWords.delete(word);
+    else ocrState.newWords.add(word);
+    saveOcrSettings();
+    renderOcrWords();
+    renderOcrNewWords();
+    updateOcrChrome();
+    renderOcrWordDetail();
+    toast(wasMarked ? `已取消生词 ${word}` : `已加入生词本：${word}`);
+    setLive(wasMarked ? `已取消生词 ${word}` : `已标记生词 ${word}`);
+  }
+
+  async function speakOcrWord() {
+    if (ocrState.wordPlaying) {
+      stopOcrWordAudio();
+      return;
+    }
+    const word = ocrState.currentWord;
+    if (!word) return;
+    stopOcrSpeech();
+    ocrState.wordPlaying = true;
+    const token = ++ocrState.wordToken;
+    renderOcrWordDetail();
+    const finish = () => {
+      if (token !== ocrState.wordToken) return;
+      ocrState.wordPlaying = false;
+      renderOcrWordDetail();
+    };
+    const source = ocrAudioMap.get(word);
+    if (source) {
+      const ok = await playOcrAudio(source, ocrState.rate);
+      if (token !== ocrState.wordToken) return;
+      if (ok) {
+        finish();
+        return;
+      }
+    }
+    const voices = ocrEnglishVoices();
+    if (voices.length) {
+      const ok = await speakOcrTts(word, ocrState.rate);
+      if (token !== ocrState.wordToken) return;
+      if (ok) {
+        finish();
+        return;
+      }
+    }
+    const ok = await playOcrAudio(ocrYoudaoUrl(word), ocrState.rate);
+    if (token !== ocrState.wordToken) return;
+    if (!ok) toast("发音暂时不可用，请检查网络或安装英文语音包");
+    finish();
+  }
+
+  function ensureOcrTesseract() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (ocrState.tesseractPromise) return ocrState.tesseractPromise;
+    ocrState.tesseractPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "vendor/tesseract/tesseract.min.js";
+      script.async = true;
+      script.onload = () => {
+        if (window.Tesseract) resolve(window.Tesseract);
+        else reject(new Error("Tesseract 未加载"));
+      };
+      script.onerror = () => reject(new Error("无法加载本地 OCR 引擎"));
+      document.head.appendChild(script);
+    }).catch(error => {
+      ocrState.tesseractPromise = null;
+      throw error;
+    });
+    return ocrState.tesseractPromise;
+  }
+
+  function ocrStatusText(message) {
+    const status = String(message && message.status || "").toLowerCase();
+    const labels = [
+      ["loading tesseract core", "加载识别引擎"],
+      ["initializing tesseract", "初始化识别引擎"],
+      ["loading language traineddata", "加载英文识别包"],
+      ["initializing api", "准备识别接口"],
+      ["recognizing text", "识别文字"]
+    ];
+    const found = labels.find(([key]) => status.includes(key));
+    return found ? found[1] : "正在识别";
+  }
+
+  async function ensureOcrWorker() {
+    if (ocrState.worker) return ocrState.worker;
+    if (ocrState.workerPromise) return ocrState.workerPromise;
+    ocrState.workerPromise = (async () => {
+      const Tesseract = await ensureOcrTesseract();
+      const worker = await Tesseract.createWorker("eng", 1, {
+        workerPath: "vendor/tesseract/worker.min.js",
+        corePath: "vendor/tesseract/tesseract-core-simd-lstm.wasm.js",
+        langPath: "vendor/tesseract/lang",
+        logger: progress => {
+          if (!ocrState.busy) return;
+          setOcrStatus(`${ocrStatusText(progress)} ${Math.round((progress.progress || 0) * 100)}%`);
+          setOcrProgress(progress.progress || 0);
+        }
+      });
+      ocrState.worker = worker;
+      return worker;
+    })().catch(error => {
+      ocrState.workerPromise = null;
+      throw error;
+    });
+    return ocrState.workerPromise;
+  }
+
+  function loadOcrImage(source) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error("无法读取图片"));
+      image.src = source;
+    });
+  }
+
+  async function prepareOcrImage(file) {
+    let source = null;
+    try {
+      if ("createImageBitmap" in window) {
+        source = await createImageBitmap(file, { imageOrientation: "from-image" });
+      }
+    } catch (error) {}
+    if (!source) {
+      const url = URL.createObjectURL(file);
+      try {
+        source = await loadOcrImage(url);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+    const width = source.width || source.naturalWidth || 0;
+    const height = source.height || source.naturalHeight || 0;
+    if (!width || !height) return file;
+    const scale = Math.min(1, OCR_MAX_IMAGE / Math.max(width, height));
+    if (scale >= 1) {
+      if (typeof source.close === "function") source.close();
+      return file;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(source, 0, 0, canvas.width, canvas.height);
+    if (typeof source.close === "function") source.close();
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.92));
+    return blob || file;
+  }
+
+  function normalizeOcrText(text) {
+    return String(text || "")
+      .replace(/\r\n?/g, "\n")
+      .replace(/[ \t]+\n/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
+
+  async function runOcr() {
+    if (ocrState.busy) return;
+    if (!ocrState.imageBlob) {
+      toast("先拍照或从相册选一张图片");
+      return;
+    }
+    stopOcrSpeech();
+    ocrState.busy = true;
+    const runButton = $("#ocr-run");
+    if (runButton) {
+      runButton.disabled = true;
+      runButton.textContent = "识别中…";
+    }
+    setOcrPhotoBadge("识别中", "is-busy");
+    setOcrStatus("正在准备图片…");
+    setOcrProgress(0.02);
+    try {
+      const prepared = await prepareOcrImage(ocrState.imageBlob);
+      const worker = await ensureOcrWorker();
+      if (!ocrView.hidden) setOcrStatus("正在识别文字…");
+      const result = await worker.recognize(prepared);
+      const text = normalizeOcrText(result && result.data && result.data.text);
+      if (!text) {
+        setOcrStatus("没有识别到文字，换一张更清晰的照片试试", true);
+        setOcrPhotoBadge("未识别", "is-busy");
+        toast("没有识别到文字");
+        return;
+      }
+      setOcrText(text);
+      setOcrStatus(`识别完成 · ${ocrState.words.length} 个单词`);
+      setOcrPhotoBadge("已识别", "is-ready");
+      setOcrProgress(1);
+      window.setTimeout(() => {
+        const bar = $("#ocr-progress");
+        if (bar) bar.hidden = true;
+      }, 600);
+      const panel = $("#ocr-text-panel");
+      if (panel && !ocrView.hidden) {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        panel.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      }
+      if (ocrState.autoRead) {
+        window.setTimeout(() => {
+          if (!ocrView.hidden && ocrState.text && !ocrState.busy) startOcrRead();
+        }, 320);
+      }
+    } catch (error) {
+      setOcrStatus(`识别失败：${error && error.message ? error.message : "请重试"}`, true);
+      setOcrPhotoBadge("识别失败", "is-busy");
+      toast("识别失败，换一张图片或稍后再试");
+      if (ocrState.worker) {
+        try { await ocrState.worker.terminate(); } catch (e) {}
+        ocrState.worker = null;
+        ocrState.workerPromise = null;
+      }
+    } finally {
+      ocrState.busy = false;
+      if (runButton) {
+        runButton.disabled = !ocrState.imageBlob;
+        runButton.textContent = ocrState.imageBlob ? "重新识别" : "开始识别";
+      }
+      updateOcrChrome();
+    }
+  }
+
+  function handleOcrFile(file) {
+    if (!file) return;
+    if (file.type && !file.type.startsWith("image/")) {
+      toast("请选择图片文件");
+      return;
+    }
+    if (file.size > 25 * 1024 * 1024) {
+      toast("图片太大了，请选 25MB 以内的图片");
+      return;
+    }
+    if (ocrState.previewUrl) URL.revokeObjectURL(ocrState.previewUrl);
+    ocrState.imageBlob = file;
+    ocrState.imageName = file.name || "photo.jpg";
+    ocrState.previewUrl = URL.createObjectURL(file);
+    const image = $("#ocr-preview");
+    if (image) image.src = ocrState.previewUrl;
+    const name = $("#ocr-image-name");
+    if (name) name.textContent = ocrState.imageName;
+    const wrap = $("#ocr-preview-wrap");
+    if (wrap) wrap.hidden = false;
+    const zone = $("#ocr-dropzone");
+    if (zone) zone.hidden = true;
+    const run = $("#ocr-run");
+    if (run) run.disabled = false;
+    setOcrPhotoBadge("已选择", "is-ready");
+    setOcrStatus("图片已选好，点“开始识别”");
+    const bar = $("#ocr-progress");
+    if (bar) bar.hidden = true;
+  }
+
+  function clearOcrImage() {
+    if (ocrState.previewUrl) URL.revokeObjectURL(ocrState.previewUrl);
+    ocrState.previewUrl = "";
+    ocrState.imageBlob = null;
+    ocrState.imageName = "";
+    const image = $("#ocr-preview");
+    if (image) image.removeAttribute("src");
+    const wrap = $("#ocr-preview-wrap");
+    if (wrap) wrap.hidden = true;
+    const zone = $("#ocr-dropzone");
+    if (zone) zone.hidden = false;
+    const run = $("#ocr-run");
+    if (run) {
+      run.disabled = true;
+      run.textContent = "开始识别";
+    }
+    setOcrPhotoBadge("待选择");
+    setOcrStatus("先拍照或选图");
+    const bar = $("#ocr-progress");
+    if (bar) bar.hidden = true;
+  }
+
+  function openOcrView() {
+    stopOcrSpeech();
+    setView("ocr");
+    const area = $("#ocr-text");
+    if (area) area.value = ocrState.text;
+    const rate = $("#ocr-rate");
+    if (rate) rate.value = String(ocrState.rate);
+    const auto = $("#ocr-auto");
+    if (auto) auto.checked = ocrState.autoRead;
+    ocrState.words = ocrParseWords(ocrState.text);
+    renderOcrAll();
+    updateOcrVoiceNote();
+    ensureOcrDictionary().catch(() => {});
+    scrollTop();
+    window.setTimeout(() => {
+      if (ocrMain) ocrMain.focus({ preventScroll: true });
+    }, 40);
+  }
+
+  function handleOcrTextInput() {
+    const area = $("#ocr-text");
+    if (!area) return;
+    if (ocrState.speaking) stopOcrSpeech();
+    ocrState.text = area.value.slice(0, 20000);
+    scheduleOcrSave();
+    window.clearTimeout(ocrState.inputTimer);
+    ocrState.inputTimer = window.setTimeout(() => {
+      ocrState.words = ocrParseWords(ocrState.text);
+      renderOcrAll();
+    }, 160);
+  }
+
+  function clearOcrText() {
+    stopOcrSpeech();
+    setOcrText("");
+    saveOcrSettings();
+    const area = $("#ocr-text");
+    if (area) area.focus({ preventScroll: true });
+    toast("已清空文字");
+  }
+
   function renderLabHome() {
     if (!labMain) return;
     updateLabChrome();
@@ -6645,6 +8006,30 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
     if (action === "ipa-toggle") { toggleIpaLearned(); return; }
     if (action === "ipa-prev") { navigateIpa(-1); return; }
     if (action === "ipa-next") { navigateIpa(1); return; }
+    if (action === "ocr-home") {
+      stopAudio();
+      stopOcrSpeech();
+      go("#/");
+      return;
+    }
+    if (action === "ocr-camera") {
+      const input = $("#ocr-camera-input");
+      if (input) input.click();
+      return;
+    }
+    if (action === "ocr-upload") {
+      const input = $("#ocr-upload-input");
+      if (input) input.click();
+      return;
+    }
+    if (action === "ocr-run") { runOcr(); return; }
+    if (action === "ocr-clear-image") { clearOcrImage(); return; }
+    if (action === "ocr-read") { startOcrRead(); return; }
+    if (action === "ocr-clear-text") { clearOcrText(); return; }
+    if (action === "ocr-word") { openOcrWord(actionNode.dataset.word, actionNode); return; }
+    if (action === "close-ocr-word") { closeOcrWord(); return; }
+    if (action === "ocr-speak-word") { speakOcrWord(); return; }
+    if (action === "ocr-mark-word") { toggleOcrNew(); return; }
     if (action === "lab-map" || action === "lab-win-map") {
       closeLabWin(true);
       return;
@@ -6723,8 +8108,13 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
       labProgress = { learned: {} };
       localStorage.removeItem(IPA_KEY);
       ipaProgress.clear();
+      ocrState.newWords.clear();
+      saveOcrSettings();
       updateLabChrome();
       updateIpaChrome();
+      updateOcrChrome();
+      renderOcrWords();
+      renderOcrNewWords();
       if (state.view === "ipa") renderIpa();
       resetArmed = false;
       window.clearTimeout(resetTimer);
@@ -6775,6 +8165,11 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   }
 
   document.addEventListener("keydown", event => {
+    if (!ocrWordModal.hidden) {
+      if (event.key === "Escape") { closeOcrWord(); return; }
+      trapFocus(event, ocrWordModal);
+      return;
+    }
     if (!ipaModal.hidden) {
       if (event.key === "Escape") { closeIpaDetail(); return; }
       if (event.key === "ArrowLeft") { event.preventDefault(); navigateIpa(-1); return; }
@@ -6810,6 +8205,45 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   ipaModal.addEventListener("click", event => {
     if (event.target === ipaModal) closeIpaDetail();
   });
+
+  ocrWordModal.addEventListener("click", event => {
+    if (event.target === ocrWordModal) closeOcrWord();
+  });
+
+  const ocrTextArea = $("#ocr-text");
+  if (ocrTextArea) ocrTextArea.addEventListener("input", handleOcrTextInput);
+  const ocrRateSelect = $("#ocr-rate");
+  if (ocrRateSelect) {
+    ocrRateSelect.addEventListener("change", event => {
+      const rate = Number(event.target.value);
+      if (!OCR_RATES.includes(rate)) return;
+      ocrState.rate = rate;
+      saveOcrSettings();
+      if (ocrState.speaking) {
+        stopOcrSpeech();
+        window.setTimeout(() => {
+          if (!ocrView.hidden && ocrState.text) startOcrRead();
+        }, 120);
+      }
+    });
+  }
+  const ocrAutoToggle = $("#ocr-auto");
+  if (ocrAutoToggle) {
+    ocrAutoToggle.addEventListener("change", event => {
+      ocrState.autoRead = Boolean(event.target.checked);
+      saveOcrSettings();
+    });
+  }
+  ["ocr-camera-input", "ocr-upload-input"].forEach(id => {
+    const input = $(`#${id}`);
+    if (!input) return;
+    input.addEventListener("change", event => {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = "";
+      if (file) handleOcrFile(file);
+    });
+  });
+  window.addEventListener("pagehide", saveOcrSettings);
 
   celebration.addEventListener("click", event => {
     if (event.target === celebration) closeCelebration();
@@ -6926,6 +8360,12 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   updateStars();
   updateLabChrome();
   updateIpaChrome();
+  loadOcrSettings();
+  updateOcrChrome();
+  updateOcrVoiceNote();
+  if ("speechSynthesis" in window && typeof window.speechSynthesis.addEventListener === "function") {
+    window.speechSynthesis.addEventListener("voiceschanged", updateOcrVoiceNote);
+  }
   route();
 })();
 </script>
