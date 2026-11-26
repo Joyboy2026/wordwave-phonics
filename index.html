@@ -7261,6 +7261,9 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       setOcrStatus(`识别完成 · ${ocrState.words.length} 个单词`);
       setOcrPhotoBadge("已识别", "is-ready");
       setOcrProgress(1);
+      // Warm the local dictionary in the background so offline lookups work
+      // after the first recognition; failures stay silent.
+      ensureOcrDictionary().catch(() => {});
       window.setTimeout(() => {
         const bar = $("#ocr-progress");
         if (bar) bar.hidden = true;
