@@ -3831,6 +3831,54 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 }
 .ocr-progress i { display: block; width: 0; height: 100%; background: var(--coral); transition: width 180ms ease; }
 
+.ocr-reading {
+  position: relative;
+  min-height: 128px;
+  padding: 12px 13px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--card);
+}
+.ocr-reading-text {
+  max-height: 340px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.9;
+}
+.ocr-reading-text:empty { display: none; }
+.ocr-token-group {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+.ocr-token {
+  display: inline;
+  margin: 0;
+  padding: 0 1px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .12s ease, color .12s ease;
+}
+.ocr-token:hover { background: var(--soft); }
+.ocr-token.is-fav { color: var(--coral); }
+.ocr-token.is-reading {
+  background: var(--lime);
+  box-shadow: 0 0 0 3px var(--lime);
+  color: var(--ink);
+}
+.ocr-token:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.ocr-editor { margin-top: 8px; }
 .ocr-textarea {
   display: block;
   width: 100%;
@@ -3850,8 +3898,9 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-top: 6px;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 8px;
 }
 .ocr-small-btn { min-height: 30px !important; padding: 0 9px !important; font-size: 10.5px !important; }
 .ocr-save-hint { color: var(--muted); font-family: var(--mono); font-size: 9px; }
@@ -3959,9 +4008,10 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   .ocr-main { width: min(100% - 24px, 860px); padding-top: 18px; }
   .ocr-title { font-size: clamp(38px, 10.5vw, 56px); }
   .ocr-panel { padding: 14px 13px 15px; border-radius: 15px; }
-  .ocr-panel-head h2 { font-size: 18px; }
+  .ocr-panel-head h2 { font-size: 18px; text-wrap: balance; }
   .ocr-preview { max-height: 230px; }
   .ocr-textarea { min-height: 138px; font-size: 14px; }
+  .ocr-reading-text { max-height: 330px; }
   .ocr-word { font-size: 13px; min-height: 29px; }
 }
 @media (max-width: 380px) {
@@ -3970,6 +4020,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   .ocr-read-btn { width: 100%; }
   .ocr-rate-label { justify-content: space-between; }
   .ocr-textarea { min-height: 120px; }
+  .ocr-reading { min-height: 112px; padding: 10px 11px; }
+  .ocr-reading-text { max-height: 300px; font-size: 16px; line-height: 1.85; }
 }
 
 
@@ -4080,8 +4132,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         <span class="lab-banner-copy">
           <span class="eyebrow">NEW · 拍照读英文</span>
           <strong>拍下来，读出声。</strong>
-          <span>OCR 识别 · 文字可编辑 · 倍速朗读 · 点词听音查义 · 生词本</span>
-          <span class="lab-banner-progress" id="ocr-banner-progress">生词 0 个</span>
+          <span>OCR 识别 · 跟读高亮 · 点词查义 · 收藏生词</span>
+          <span class="lab-banner-progress" id="ocr-banner-progress">收藏 0 个</span>
         </span>
         <span class="lab-banner-cta">进入拍照识别 <b aria-hidden="true">→</b></span>
       </a>
@@ -4170,7 +4222,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       <div class="subbar-inner">
         <button class="back-btn" type="button" data-action="ocr-home" aria-label="返回首页">← <span>首页</span></button>
         <div class="subbar-center"><span class="sub-chip"><i class="ocr-chip-dot"></i><span>OCR · 拍照读英文</span></span></div>
-        <span class="lab-count-chip" id="ocr-count-chip">生词 0</span>
+        <span class="lab-count-chip" id="ocr-count-chip">收藏 0</span>
       </div>
     </header>
     <div class="lab-main ocr-main" id="ocr-main" tabindex="-1">
@@ -4178,7 +4230,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         <div>
           <p class="eyebrow">PHOTO READER · OCR</p>
           <h1 class="lab-title ocr-title"><span class="hl">拍下来，</span><span class="tail">读出声。</span></h1>
-          <p class="lab-lede">拍一张英文书页或练习纸，识别成可编辑的英文；自动朗读，点任意单词听发音、看音标和中文释义，生词随手标记。</p>
+          <p class="lab-lede">拍一张英文书页或练习纸，识别成一段可点的英文；朗读时逐词高亮跟读，点任意单词看发音、音标和释义，喜欢的词可以收藏。</p>
           <div class="lab-stats">
             <span class="lab-stat"><b>离线</b> 识别</span>
             <span class="lab-stat"><b>倍速</b> 朗读</span>
@@ -4189,8 +4241,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
           <p class="eyebrow">HOW IT WORKS</p>
           <ol class="ocr-guide-list">
             <li><b>01</b> 拍照或从相册选图</li>
-            <li><b>02</b> 识别后可修改文字</li>
-            <li><b>03</b> 点词听音、查义、标生词</li>
+            <li><b>02</b> 识别后逐词跟读高亮</li>
+            <li><b>03</b> 点词听音、查义、收藏</li>
           </ol>
           <p class="ocr-guide-note">照片只在浏览器本地识别，不会上传。</p>
         </div>
@@ -4229,12 +4281,19 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
 
       <section class="ocr-panel" id="ocr-text-panel" aria-labelledby="ocr-text-title">
         <div class="ocr-panel-head">
-          <div><p class="eyebrow">STEP 02 · TEXT</p><h2 id="ocr-text-title">识别文字，可修改</h2></div>
+          <div><p class="eyebrow">STEP 02 · READ</p><h2 id="ocr-text-title">识别结果，点词跟读</h2></div>
           <span class="ocr-step-badge" id="ocr-word-count">0 个词</span>
         </div>
-        <label class="sr-only" for="ocr-text">识别出的英文文字</label>
-        <textarea class="ocr-textarea" id="ocr-text" rows="7" spellcheck="false" placeholder="识别出的英文会出现在这里，也可以直接粘贴或输入。"></textarea>
+        <div class="ocr-reading" id="ocr-reading" role="group" aria-label="识别出的英文，点单词查看释义">
+          <p class="ocr-empty" id="ocr-reading-empty">识别后，英文会显示在这里；点任意单词查看发音、音标和释义。</p>
+          <div class="ocr-reading-text" id="ocr-reading-text"></div>
+        </div>
+        <div class="ocr-editor" id="ocr-editor" hidden>
+          <label class="sr-only" for="ocr-text">识别出的英文文字</label>
+          <textarea class="ocr-textarea" id="ocr-text" rows="7" spellcheck="false" placeholder="识别出的英文会出现在这里，也可以直接粘贴或输入。"></textarea>
+        </div>
         <div class="ocr-text-actions">
+          <button class="btn btn-ghost ocr-small-btn" type="button" data-action="ocr-toggle-editor" id="ocr-edit-toggle" aria-expanded="false">✎ 编辑原文</button>
           <button class="btn btn-ghost ocr-small-btn" type="button" data-action="ocr-clear-text">清空文字</button>
           <span class="ocr-save-hint" id="ocr-save-hint">修改会自动保存</span>
         </div>
@@ -4254,22 +4313,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         <p class="ocr-voice-note" id="ocr-voice-note">朗读优先使用设备语音；没有英文语音包时会用在线逐词朗读（需联网）。</p>
       </section>
 
-      <section class="ocr-panel" id="ocr-words-panel" aria-labelledby="ocr-words-title">
-        <div class="ocr-panel-head">
-          <div><p class="eyebrow">STEP 03 · WORDS</p><h2 id="ocr-words-title">点一个词</h2></div>
-          <span class="ocr-step-badge">听音 · 音标 · 释义</span>
-        </div>
-        <div class="ocr-words" id="ocr-words"></div>
-        <p class="ocr-empty" id="ocr-words-empty">识别文字后，这里会列出每个可点的单词。</p>
-      </section>
-
       <section class="ocr-panel ocr-new-panel" id="ocr-new-panel" aria-labelledby="ocr-new-title">
         <div class="ocr-panel-head">
-          <div><p class="eyebrow">MY WORDS</p><h2 id="ocr-new-title">生词本</h2></div>
+          <div><p class="eyebrow">FAVORITES</p><h2 id="ocr-new-title">收藏夹</h2></div>
           <span class="ocr-step-badge" id="ocr-new-count">0 个</span>
         </div>
         <div class="ocr-words ocr-new-words" id="ocr-new-words"></div>
-        <p class="ocr-empty" id="ocr-new-empty">在单词卡里点“标记生词”，就会收进这里。</p>
+        <p class="ocr-empty" id="ocr-new-empty">在单词卡里点“☆ 收藏”，就会收进这里。</p>
       </section>
     </div>
   </section>
@@ -4374,7 +4424,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     <p class="ocr-word-base" id="ocr-word-base" hidden></p>
     <div class="ocr-word-actions">
       <button class="btn btn-primary" type="button" data-action="ocr-speak-word" id="ocr-speak-word">🔊 听发音</button>
-      <button class="btn btn-ghost" type="button" data-action="ocr-mark-word" id="ocr-mark-word" aria-pressed="false">☆ 标记生词</button>
+      <button class="btn btn-ghost" type="button" data-action="ocr-mark-word" id="ocr-mark-word" aria-pressed="false">☆ 收藏</button>
     </div>
     <p class="ocr-word-hint" id="ocr-word-hint">发音优先用本地音频，其次用设备语音或在线发音。</p>
   </div>
@@ -4536,6 +4586,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     rate: 1,
     autoRead: true,
     newWords: new Set(),
+    readTokens: [],
+    activeToken: -1,
     imageBlob: null,
     imageName: "",
     previewUrl: "",
@@ -6620,9 +6672,9 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   function updateOcrChrome() {
     const count = ocrState.newWords.size;
     const chip = $("#ocr-count-chip");
-    if (chip) chip.textContent = `生词 ${count}`;
+    if (chip) chip.textContent = `收藏 ${count}`;
     const banner = $("#ocr-banner-progress");
-    if (banner) banner.textContent = `生词 ${count} 个`;
+    if (banner) banner.textContent = `收藏 ${count} 个`;
     const wordCount = $("#ocr-word-count");
     if (wordCount) wordCount.textContent = `${ocrState.words.length} 个词`;
     const newCount = $("#ocr-new-count");
@@ -6632,21 +6684,68 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   }
 
   function renderOcrWords() {
-    const host = $("#ocr-words");
-    const empty = $("#ocr-words-empty");
+    const host = $("#ocr-reading-text");
+    const empty = $("#ocr-reading-empty");
     if (!host || !empty) return;
-    if (!ocrState.words.length) {
+    const text = String(ocrState.text || "");
+    ocrState.readTokens = [];
+    if (!text.trim()) {
       host.innerHTML = "";
       empty.hidden = false;
       return;
     }
     empty.hidden = true;
-    host.innerHTML = ocrState.words.map(word => {
-      const marked = ocrState.newWords.has(word);
-      return `<button class="ocr-word${marked ? " is-new" : ""}" type="button" data-action="ocr-word" data-word="${escapeHTML(word)}" aria-label="${escapeHTML(word)}${marked ? "，已标记生词" : ""}">
-        <span>${escapeHTML(word)}</span>${marked ? '<span class="ocr-word-star" aria-hidden="true">★</span>' : ""}
-      </button>`;
-    }).join("");
+    const pattern = /[A-Za-z]+(?:['’][A-Za-z]+)*/g;
+    let html = "";
+    let last = 0;
+    let index = 0;
+    let match;
+    while ((match = pattern.exec(text))) {
+      html += escapeHTML(text.slice(last, match.index));
+      const raw = match[0];
+      const word = ocrNormalizeWord(raw);
+      const fav = ocrState.newWords.has(word);
+      const label = `${escapeHTML(raw)}${fav ? "，已收藏" : ""}，点按查看释义`;
+      const tailMatch = text.slice(match.index + raw.length).match(/^[.,!?;:…)"'”’]+/);
+      const tail = tailMatch ? tailMatch[0] : "";
+      html += `<span class="ocr-token-group"><button class="ocr-token${fav ? " is-fav" : ""}" type="button" data-action="ocr-word" data-word="${escapeHTML(word)}" data-token-index="${index}" aria-label="${label}">${escapeHTML(raw)}</button>${escapeHTML(tail)}</span>`;
+      last = match.index + raw.length + tail.length;
+      index += 1;
+    }
+    html += escapeHTML(text.slice(last));
+    host.innerHTML = html;
+    ocrState.readTokens = Array.from(host.querySelectorAll(".ocr-token")).map(button => ({
+      el: button,
+      word: button.dataset.word || ""
+    }));
+  }
+
+  function clearOcrHighlight() {
+    ocrState.activeToken = -1;
+    (ocrState.readTokens || []).forEach(token => token.el.classList.remove("is-reading"));
+  }
+
+  function highlightOcrToken(index) {
+    if (!ocrState.speaking) return;
+    const tokens = ocrState.readTokens || [];
+    if (!tokens.length) return;
+    const target = Math.max(0, Math.min(tokens.length - 1, Number(index) || 0));
+    if (target === ocrState.activeToken) return;
+    tokens.forEach((token, i) => token.el.classList.toggle("is-reading", i === target));
+    ocrState.activeToken = target;
+    const el = tokens[target].el;
+    const host = $("#ocr-reading-text");
+    if (!host || !el) return;
+    const top = el.offsetTop;
+    if (top < host.scrollTop + 8 || top + el.offsetHeight > host.scrollTop + host.clientHeight - 8) {
+      host.scrollTop = Math.max(0, top - host.clientHeight * 0.38);
+    }
+  }
+
+  function updateOcrTokenFavorites() {
+    (ocrState.readTokens || []).forEach(token => {
+      token.el.classList.toggle("is-fav", ocrState.newWords.has(token.word));
+    });
   }
 
   function renderOcrNewWords() {
@@ -6661,7 +6760,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     }
     empty.hidden = true;
     host.innerHTML = words.map(word => `
-      <button class="ocr-word is-new" type="button" data-action="ocr-word" data-word="${escapeHTML(word)}" aria-label="${escapeHTML(word)}，生词">
+      <button class="ocr-word is-new" type="button" data-action="ocr-word" data-word="${escapeHTML(word)}" aria-label="${escapeHTML(word)}，已收藏">
         <span>${escapeHTML(word)}</span><span class="ocr-word-star" aria-hidden="true">★</span>
       </button>
     `).join("");
@@ -6727,6 +6826,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     } catch (error) {}
     stopOcrAudioOnly();
+    clearOcrHighlight();
     setOcrReadUI();
   }
 
@@ -6770,7 +6870,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     });
   }
 
-  function speakOcrTts(text, rate) {
+  function speakOcrTts(text, rate, handlers = {}) {
     return new Promise(resolve => {
       if (!text || !("speechSynthesis" in window)) {
         resolve(false);
@@ -6781,6 +6881,25 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         resolve(false);
         return;
       }
+      const isActive = () => (typeof handlers.isActive === "function" ? handlers.isActive() : true);
+      const words = (text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length;
+      let done = false;
+      let tickTimer = null;
+      let tick = -1;
+      let boundarySeen = false;
+      let startTimer = null;
+      let watchdog = null;
+      const cleanup = () => {
+        if (tickTimer) { window.clearInterval(tickTimer); tickTimer = null; }
+        if (startTimer) { window.clearTimeout(startTimer); startTimer = null; }
+        if (watchdog) { window.clearTimeout(watchdog); watchdog = null; }
+      };
+      const finish = ok => {
+        if (done) return;
+        done = true;
+        cleanup();
+        resolve(ok);
+      };
       try {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
@@ -6791,18 +6910,42 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         utterance.lang = voice ? voice.lang : "en-GB";
         utterance.rate = Math.max(0.5, Math.min(1.5, Number(rate) || 1));
         utterance.pitch = 1;
-        let done = false;
-        const finish = ok => {
-          if (done) return;
-          done = true;
-          resolve(ok);
-        };
         utterance.onend = () => finish(true);
         utterance.onerror = () => finish(false);
+        utterance.onboundary = event => {
+          if (done || !isActive()) return;
+          boundarySeen = true;
+          if (tickTimer) { window.clearInterval(tickTimer); tickTimer = null; }
+          if (event && Number.isFinite(event.charIndex) && typeof handlers.onBoundary === "function") {
+            handlers.onBoundary(event.charIndex);
+          }
+        };
+        // Some mobile voices never emit word boundaries. In that case advance
+        // an estimated word cursor so the reading text still follows along.
+        startTimer = window.setTimeout(() => {
+          startTimer = null;
+          if (done || boundarySeen || !isActive() || !words) return;
+          tick = 0;
+          if (typeof handlers.onFallbackTick === "function") handlers.onFallbackTick(0);
+          tickTimer = window.setInterval(() => {
+            if (done || !isActive()) {
+              if (tickTimer) window.clearInterval(tickTimer);
+              tickTimer = null;
+              return;
+            }
+            tick += 1;
+            if (tick >= words) {
+              window.clearInterval(tickTimer);
+              tickTimer = null;
+              return;
+            }
+            if (typeof handlers.onFallbackTick === "function") handlers.onFallbackTick(tick);
+          }, Math.max(170, 280 / utterance.rate));
+        }, 520);
         window.speechSynthesis.speak(utterance);
-        window.setTimeout(() => finish(false), Math.max(5000, text.length * 260));
+        watchdog = window.setTimeout(() => finish(false), Math.max(5000, text.length * 280 / utterance.rate));
       } catch (error) {
-        resolve(false);
+        finish(false);
       }
     });
   }
@@ -6840,18 +6983,34 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
 
   async function readOcrTextTts(text, token) {
     const chunks = splitOcrChunks(text);
+    let cursor = 0;
     for (const chunk of chunks) {
       if (token !== ocrState.speakToken) return;
-      await speakOcrTts(chunk, ocrState.rate);
+      const chunkWords = chunk.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || [];
+      if (!chunkWords.length) continue;
+      const start = cursor;
+      highlightOcrToken(start);
+      await speakOcrTts(chunk, ocrState.rate, {
+        isActive: () => token === ocrState.speakToken,
+        onBoundary: charIndex => {
+          const before = (chunk.slice(0, Math.max(0, charIndex)).match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length;
+          highlightOcrToken(start + before);
+        },
+        onFallbackTick: localIndex => highlightOcrToken(start + localIndex)
+      });
+      cursor += chunkWords.length;
     }
   }
 
   async function readOcrTextFallback(text, token) {
     const tokens = String(text || "").match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[.!?;:,]/g) || [];
     let failures = 0;
+    let wordIndex = -1;
     for (const tokenText of tokens) {
       if (token !== ocrState.speakToken) return;
       if (/^[A-Za-z]/.test(tokenText)) {
+        wordIndex += 1;
+        highlightOcrToken(wordIndex);
         const word = ocrNormalizeWord(tokenText);
         const source = ocrAudioMap.get(word) || ocrYoudaoUrl(word);
         const ok = await playOcrAudio(source, ocrState.rate);
@@ -6879,6 +7038,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       return;
     }
     stopOcrWordAudio();
+    clearOcrHighlight();
     const token = ++ocrState.speakToken;
     ocrState.speaking = true;
     setOcrReadUI();
@@ -6888,8 +7048,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (token !== ocrState.speakToken) return;
     ocrState.speaking = false;
     setOcrReadUI();
+    clearOcrHighlight();
   }
-
 
   async function ensureOcrDictionary() {
     if (ocrState.dict) return ocrState.dict;
@@ -7003,7 +7163,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     }
     if (mark) {
       const marked = ocrState.newWords.has(word);
-      mark.textContent = marked ? "★ 已标记生词" : "☆ 标记生词";
+      mark.textContent = marked ? "★ 已收藏" : "☆ 收藏";
       mark.classList.toggle("is-marked", marked);
       mark.setAttribute("aria-pressed", marked ? "true" : "false");
     }
@@ -7055,7 +7215,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     document.body.classList.remove("no-scroll");
     let target = ocrLastFocused;
     if (!target || !document.contains(target)) {
-      target = ocrView.querySelector(`.ocr-word[data-word="${ocrState.currentWord}"]`);
+      target = ocrView.querySelector(`.ocr-token[data-word="${ocrState.currentWord}"], .ocr-word[data-word="${ocrState.currentWord}"]`);
     }
     if (restoreFocus && target && typeof target.focus === "function") {
       target.focus({ preventScroll: true });
@@ -7071,12 +7231,12 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (wasMarked) ocrState.newWords.delete(word);
     else ocrState.newWords.add(word);
     saveOcrSettings();
-    renderOcrWords();
+    updateOcrTokenFavorites();
     renderOcrNewWords();
     updateOcrChrome();
     renderOcrWordDetail();
-    toast(wasMarked ? `已取消生词 ${word}` : `已加入生词本：${word}`);
-    setLive(wasMarked ? `已取消生词 ${word}` : `已标记生词 ${word}`);
+    toast(wasMarked ? `已取消收藏 ${word}` : `已收藏：${word}`);
+    setLive(wasMarked ? `已取消收藏 ${word}` : `已收藏 ${word}`);
   }
 
   async function speakOcrWord() {
@@ -7258,6 +7418,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         return;
       }
       setOcrText(text);
+      setOcrEditor(false);
       setOcrStatus(`识别完成 · ${ocrState.words.length} 个单词`);
       setOcrPhotoBadge("已识别", "is-ready");
       setOcrProgress(1);
@@ -7271,7 +7432,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       const panel = $("#ocr-text-panel");
       if (panel && !ocrView.hidden) {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        panel.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+        const top = Math.max(0, panel.getBoundingClientRect().top + window.scrollY - 88);
+        window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
       }
       if (ocrState.autoRead) {
         window.setTimeout(() => {
@@ -7349,9 +7511,26 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (bar) bar.hidden = true;
   }
 
+  function setOcrEditor(open) {
+    const editor = $("#ocr-editor");
+    const button = $("#ocr-edit-toggle");
+    const area = $("#ocr-text");
+    if (!editor || !button) return;
+    const shouldOpen = Boolean(open);
+    editor.hidden = !shouldOpen;
+    button.textContent = shouldOpen ? "✓ 完成编辑" : "✎ 编辑原文";
+    button.setAttribute("aria-expanded", String(shouldOpen));
+    if (shouldOpen && area) {
+      area.focus({ preventScroll: true });
+      const end = area.value.length;
+      try { area.setSelectionRange(end, end); } catch (error) {}
+    }
+  }
+
   function openOcrView() {
     stopOcrSpeech();
     setView("ocr");
+    setOcrEditor(false);
     const area = $("#ocr-text");
     if (area) area.value = ocrState.text;
     const rate = $("#ocr-rate");
@@ -7385,8 +7564,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     stopOcrSpeech();
     setOcrText("");
     saveOcrSettings();
+    const editor = $("#ocr-editor");
     const area = $("#ocr-text");
-    if (area) area.focus({ preventScroll: true });
+    if (editor && !editor.hidden && area) area.focus({ preventScroll: true });
+    else {
+      const button = $("#ocr-edit-toggle");
+      if (button) button.focus({ preventScroll: true });
+    }
     toast("已清空文字");
   }
 
@@ -8029,6 +8213,11 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (action === "ocr-clear-image") { clearOcrImage(); return; }
     if (action === "ocr-read") { startOcrRead(); return; }
     if (action === "ocr-clear-text") { clearOcrText(); return; }
+    if (action === "ocr-toggle-editor") {
+      const editor = $("#ocr-editor");
+      setOcrEditor(editor ? editor.hidden : true);
+      return;
+    }
     if (action === "ocr-word") { openOcrWord(actionNode.dataset.word, actionNode); return; }
     if (action === "close-ocr-word") { closeOcrWord(); return; }
     if (action === "ocr-speak-word") { speakOcrWord(); return; }
