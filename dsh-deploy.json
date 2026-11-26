@@ -1,7 +1,7 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-25-pwa.7",
-  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词）+ 拍照 OCR 读英文（逐词跟读高亮、点词收藏、在线整句朗读与译文），手机端纯静态站点",
+  "version": "2026-11-25-pwa.8",
+  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词）+ 拍照 OCR 读英文（连续跟读高亮、逐句发音、识别历史、点词收藏、在线整句朗读与译文），手机端纯静态站点",
   "entrypoint": "index.html",
   "server": {
     "cwd": ".",
@@ -65,7 +65,8 @@
     "wordwave.zoom.v1",
     "wordwave.ipa.v1",
     "wordwave.browse.v1",
-    "wordwave.ocr.v1"
+    "wordwave.ocr.v1",
+    "wordwave.ocr.history.v1"
   ],
   "doNotModify": [
     "data.js",

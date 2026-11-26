@@ -3908,7 +3908,7 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   text-align: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color .12s ease, color .12s ease;
+  transition: color .12s ease;
 }
 .ocr-token:hover { background: var(--soft); }
 .ocr-token.is-fav { color: var(--coral); }
@@ -3999,6 +3999,87 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 .ocr-empty { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .ocr-new-panel { background: #fbfff0; }
 .ocr-new-words { margin-bottom: 2px; }
+.ocr-sentences-wrap {
+  margin-top: 9px;
+  padding: 9px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #fffdf7;
+}
+.ocr-sentences-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ocr-sentences-head small { color: var(--muted); font-family: var(--body); font-size: 10px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.ocr-sentences { display: grid; gap: 4px; max-height: 190px; margin-top: 6px; overflow-y: auto; }
+.ocr-sentence {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  width: 100%;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ocr-sentence:hover { background: var(--blue-soft); }
+.ocr-sentence.is-playing { background: var(--lime); }
+.ocr-sentence-index { flex: 0 0 auto; padding-top: 1px; color: var(--muted); font-family: var(--mono); font-size: 9px; }
+.ocr-sentence-text { flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.55; }
+.ocr-sentence-icon { flex: 0 0 auto; padding-top: 1px; color: var(--blue); font-size: 10px; }
+.ocr-history-panel { background: #fbf7ff; }
+.ocr-history-tools { display: flex; align-items: center; gap: 6px; }
+.ocr-history { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 8px; max-height: 330px; overflow-y: auto; }
+.ocr-history-item { display: flex; min-width: 0; gap: 6px; align-items: stretch; }
+.ocr-history-open {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ocr-history-open:hover { border-color: var(--blue); }
+.ocr-history-date { display: block; color: var(--muted); font-family: var(--mono); font-size: 9px; }
+.ocr-history-preview {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ocr-history-meta { display: block; margin-top: 3px; color: var(--muted); font-size: 9.5px; }
+.ocr-history-del {
+  flex: 0 0 30px;
+  width: 30px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ocr-history-del:hover { background: var(--coral); color: #fff; }
 
 
 .ocr-word-card {
@@ -4062,6 +4143,9 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   .ocr-textarea { min-height: 120px; }
   .ocr-reading { min-height: 112px; padding: 10px 11px; }
   .ocr-reading-text { max-height: 300px; font-size: 16px; line-height: 1.85; }
+  .ocr-sentences { max-height: 230px; }
+  .ocr-sentence-text { font-size: 12px; }
+  .ocr-history { max-height: 300px; }
 }
 
 
@@ -4172,7 +4256,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         <span class="lab-banner-copy">
           <span class="eyebrow">NEW · 拍照读英文</span>
           <strong>拍下来，读出声。</strong>
-          <span>OCR 识别 · 跟读高亮 · 点词查义 · 收藏生词</span>
+          <span>OCR 识别 · 逐句发音 · 识别历史 · 收藏生词</span>
           <span class="lab-banner-progress" id="ocr-banner-progress">收藏 0 个</span>
         </span>
         <span class="lab-banner-cta">进入拍照识别 <b aria-hidden="true">→</b></span>
@@ -4328,6 +4412,10 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
           <p class="ocr-empty" id="ocr-reading-empty">识别后，英文会显示在这里；点任意单词查看发音、音标和释义。</p>
           <div class="ocr-reading-text" id="ocr-reading-text"></div>
         </div>
+        <div class="ocr-sentences-wrap" id="ocr-sentences-wrap" hidden>
+          <div class="ocr-sentences-head"><span>逐句发音</span><small>点句子单独朗读</small></div>
+          <div class="ocr-sentences" id="ocr-sentences"></div>
+        </div>
         <div class="ocr-translation" id="ocr-translation" aria-live="polite">
           <div class="ocr-translation-head">
             <span><strong>译文</strong> · TRANSLATION</span>
@@ -4368,6 +4456,18 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         </div>
         <div class="ocr-words ocr-new-words" id="ocr-new-words"></div>
         <p class="ocr-empty" id="ocr-new-empty">在单词卡里点“☆ 收藏”，就会收进这里。</p>
+      </section>
+
+      <section class="ocr-panel ocr-history-panel" id="ocr-history-panel" aria-labelledby="ocr-history-title">
+        <div class="ocr-panel-head">
+          <div><p class="eyebrow">HISTORY</p><h2 id="ocr-history-title">识别历史</h2></div>
+          <div class="ocr-history-tools">
+            <span class="ocr-step-badge" id="ocr-history-count">0 篇</span>
+            <button class="btn btn-ghost ocr-small-btn" type="button" data-action="ocr-history-clear" id="ocr-history-clear">清空</button>
+          </div>
+        </div>
+        <div class="ocr-history" id="ocr-history"></div>
+        <p class="ocr-empty" id="ocr-history-empty">识别过的文章会保存在这里，点一条即可继续跟读。</p>
       </section>
     </div>
   </section>
@@ -4624,6 +4724,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   const ipaState = { filter: "all", currentId: null, wordIndex: 0 };
 
   const OCR_KEY = "wordwave.ocr.v1";
+  const OCR_HISTORY_KEY = "wordwave.ocr.history.v1";
   const OCR_RATES = [0.7, 0.85, 1, 1.15, 1.3];
   const OCR_MAX_IMAGE = 1800;
   const OCR_DICT_URL = "ocr-dict.json";
@@ -4638,6 +4739,10 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     newWords: new Set(),
     readTokens: [],
     activeToken: -1,
+    sentences: [],
+    activeSentence: -1,
+    readSentence: null,
+    history: [],
     imageBlob: null,
     imageName: "",
     previewUrl: "",
@@ -6709,6 +6814,157 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     } catch (error) {}
   }
 
+  function loadOcrHistory() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(OCR_HISTORY_KEY) || "[]");
+      if (!Array.isArray(raw)) return;
+      ocrState.history = raw
+        .filter(item => item && typeof item.text === "string" && item.text.trim())
+        .slice(0, 20)
+        .map((item, index) => ({
+          id: String(item.id || `hist-${index}-${Date.now().toString(36)}`),
+          text: item.text.slice(0, 20000),
+          translation: typeof item.translation === "string" ? item.translation.slice(0, 20000) : "",
+          wordCount: Number(item.wordCount) || ocrParseWords(item.text).length,
+          createdAt: item.createdAt && !Number.isNaN(Date.parse(item.createdAt)) ? item.createdAt : new Date().toISOString()
+        }));
+    } catch (error) {
+      ocrState.history = [];
+    }
+  }
+
+  function persistOcrHistory() {
+    try {
+      localStorage.setItem(OCR_HISTORY_KEY, JSON.stringify(ocrState.history));
+    } catch (error) {}
+  }
+
+  function addOcrHistory(text) {
+    const clean = String(text || "").trim();
+    if (!clean) return;
+    const existing = ocrState.history.find(item => item.text === clean);
+    if (existing) {
+      existing.createdAt = new Date().toISOString();
+      existing.wordCount = ocrParseWords(clean).length;
+      ocrState.history = [existing, ...ocrState.history.filter(item => item !== existing)];
+    } else {
+      ocrState.history.unshift({
+        id: `hist-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+        text: clean.slice(0, 20000),
+        translation: "",
+        wordCount: ocrParseWords(clean).length,
+        createdAt: new Date().toISOString()
+      });
+    }
+    ocrState.history = ocrState.history.slice(0, 20);
+    persistOcrHistory();
+    renderOcrHistory();
+    updateOcrChrome();
+  }
+
+  function updateOcrHistoryTranslation(text, translation) {
+    if (!text || !translation) return;
+    let changed = false;
+    ocrState.history.forEach(item => {
+      if (item.text === text && item.translation !== translation) {
+        item.translation = translation;
+        changed = true;
+      }
+    });
+    if (changed) {
+      persistOcrHistory();
+      renderOcrHistory();
+    }
+  }
+
+  function formatOcrHistoryDate(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    try {
+      return new Intl.DateTimeFormat("zh-CN", {
+        month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+      }).format(date);
+    } catch (error) {
+      return date.toLocaleString();
+    }
+  }
+
+  function renderOcrHistory() {
+    const host = $("#ocr-history");
+    const empty = $("#ocr-history-empty");
+    const count = $("#ocr-history-count");
+    const clear = $("#ocr-history-clear");
+    if (!host || !empty) return;
+    if (count) count.textContent = `${ocrState.history.length} 篇`;
+    if (clear) clear.disabled = !ocrState.history.length;
+    if (!ocrState.history.length) {
+      host.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+    host.innerHTML = ocrState.history.map(item => {
+      const preview = item.text.replace(/\s+/g, " ").trim();
+      const short = preview.length > 76 ? `${preview.slice(0, 76)}…` : preview;
+      const favWords = ocrParseWords(item.text).filter(word => ocrState.newWords.has(word));
+      const favText = favWords.length ? ` · 收藏 ${favWords.length}` : "";
+      return `<div class="ocr-history-item">
+        <button class="ocr-history-open" type="button" data-action="ocr-history-open" data-history-id="${escapeHTML(item.id)}">
+          <span class="ocr-history-date">${escapeHTML(formatOcrHistoryDate(item.createdAt))}</span>
+          <span class="ocr-history-preview">${escapeHTML(short)}</span>
+          <span class="ocr-history-meta">${item.wordCount} 词${favText}</span>
+        </button>
+        <button class="ocr-history-del" type="button" data-action="ocr-history-delete" data-history-id="${escapeHTML(item.id)}" aria-label="删除这条识别历史">×</button>
+      </div>`;
+    }).join("");
+  }
+
+  function openOcrHistory(id) {
+    const item = ocrState.history.find(entry => entry.id === id);
+    if (!item) return;
+    stopOcrSpeech();
+    setOcrEditor(false);
+    window.clearTimeout(ocrState.translationTimer);
+    ocrState.translationTimer = 0;
+    ocrState.translationToken += 1;
+    setOcrText(item.text, { save: true });
+    window.clearTimeout(ocrState.translationTimer);
+    ocrState.translationTimer = 0;
+    ocrState.translationToken += 1;
+    ocrState.translation = item.translation || "";
+    ocrState.translationFor = item.translation ? item.text : "";
+    ocrState.translationBusy = false;
+    ocrState.translationError = "";
+    renderOcrAll();
+    if (!item.translation) scheduleOcrTranslation();
+    const panel = $("#ocr-text-panel");
+    if (panel) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const top = Math.max(0, panel.getBoundingClientRect().top + window.scrollY - 88);
+      window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    }
+    toast("已打开历史文章");
+  }
+
+  function deleteOcrHistory(id) {
+    const before = ocrState.history.length;
+    ocrState.history = ocrState.history.filter(item => item.id !== id);
+    if (ocrState.history.length === before) return;
+    persistOcrHistory();
+    renderOcrHistory();
+    updateOcrChrome();
+  }
+
+  function clearOcrHistory() {
+    if (!ocrState.history.length) return;
+    if (!window.confirm("清空全部识别历史？")) return;
+    ocrState.history = [];
+    persistOcrHistory();
+    renderOcrHistory();
+    updateOcrChrome();
+    toast("识别历史已清空");
+  }
+
   function scheduleOcrSave() {
     window.clearTimeout(ocrState.saveTimer);
     ocrState.saveTimer = window.setTimeout(saveOcrSettings, 300);
@@ -6751,6 +7007,82 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (read && !ocrState.speaking) read.disabled = !ocrState.text.trim();
   }
 
+  function ocrSentenceChunks(text) {
+    const cleaned = String(text || "").replace(/\s+/g, " ").trim();
+    if (!cleaned) return [];
+    const parts = cleaned.match(/[^.!?。！？]+[.!?。！？]+["'”’)\]]?|[^.!?。！？]+$/g) || [cleaned];
+    let cursor = 0;
+    return parts.map((part, index) => {
+      const sentence = part.trim();
+      const count = (sentence.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length;
+      if (!count) return null;
+      const item = { text: sentence, start: cursor, count, index };
+      cursor += count;
+      return item;
+    }).filter(Boolean);
+  }
+
+  function renderOcrSentences() {
+    const wrap = $("#ocr-sentences-wrap");
+    const host = $("#ocr-sentences");
+    if (!wrap || !host) return;
+    const sentences = ocrState.sentences || [];
+    if (!sentences.length) {
+      wrap.hidden = true;
+      host.innerHTML = "";
+      return;
+    }
+    wrap.hidden = false;
+    host.innerHTML = sentences.map((sentence, index) => `
+      <button class="ocr-sentence${index === ocrState.activeSentence ? " is-playing" : ""}" type="button" data-action="ocr-sentence" data-sentence-index="${index}" aria-label="第 ${index + 1} 句，点按朗读">
+        <span class="ocr-sentence-index">${String(index + 1).padStart(2, "0")}</span>
+        <span class="ocr-sentence-text">${escapeHTML(sentence.text)}</span>
+        <span class="ocr-sentence-icon">${index === ocrState.activeSentence ? "■" : "▶"}</span>
+      </button>`).join("");
+  }
+
+  function markOcrSentence(index) {
+    ocrState.activeSentence = Number.isInteger(index) ? index : -1;
+    const rows = Array.from(document.querySelectorAll("#ocr-sentences .ocr-sentence"));
+    rows.forEach((row, i) => {
+      const active = i === ocrState.activeSentence;
+      row.classList.toggle("is-playing", active);
+      const icon = row.querySelector(".ocr-sentence-icon");
+      if (icon) icon.textContent = active ? "■" : "▶";
+    });
+    const activeRow = rows[ocrState.activeSentence];
+    const list = $("#ocr-sentences");
+    if (activeRow && list) {
+      const top = activeRow.offsetTop;
+      if (top < list.scrollTop || top + activeRow.offsetHeight > list.scrollTop + list.clientHeight) {
+        list.scrollTop = Math.max(0, top - list.clientHeight * 0.35);
+      }
+    }
+  }
+
+  function ocrSentenceIndexForToken(index) {
+    const sentences = ocrState.sentences || [];
+    for (const sentence of sentences) {
+      if (index >= sentence.start && index < sentence.start + sentence.count) return sentence.index;
+    }
+    return -1;
+  }
+
+  function toggleOcrSentence(index) {
+    if (ocrState.speaking) {
+      if (ocrState.readSentence === index) {
+        stopOcrSpeech();
+        return;
+      }
+      stopOcrSpeech();
+      window.setTimeout(() => {
+        if (!ocrView.hidden && ocrState.sentences[index]) startOcrRead(index);
+      }, 80);
+      return;
+    }
+    startOcrRead(index);
+  }
+
   function renderOcrWords() {
     const host = $("#ocr-reading-text");
     const empty = $("#ocr-reading-empty");
@@ -6786,11 +7118,16 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       el: button,
       word: button.dataset.word || ""
     }));
+    if (!ocrState.speaking) ocrState.activeSentence = -1;
+    ocrState.sentences = ocrSentenceChunks(text);
+    if (ocrState.activeSentence >= ocrState.sentences.length) ocrState.activeSentence = -1;
+    renderOcrSentences();
   }
 
   function clearOcrHighlight() {
     ocrState.activeToken = -1;
     (ocrState.readTokens || []).forEach(token => token.el.classList.remove("is-reading"));
+    markOcrSentence(-1);
   }
 
   function highlightOcrToken(index) {
@@ -6801,6 +7138,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (target === ocrState.activeToken) return;
     tokens.forEach((token, i) => token.el.classList.toggle("is-reading", i === target));
     ocrState.activeToken = target;
+    markOcrSentence(ocrSentenceIndexForToken(target));
     const el = tokens[target].el;
     const host = $("#ocr-reading-text");
     if (!host || !el) return;
@@ -6946,6 +7284,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         ocrState.translationFor = text;
         ocrState.translationBusy = false;
         ocrState.translationError = "";
+        updateOcrHistoryTranslation(text, ocrState.translation);
         scheduleOcrSave();
       } catch (error) {
         if (token !== ocrState.translationToken) return;
@@ -7000,6 +7339,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     ocrState.speakToken += 1;
     ocrState.speaking = false;
     ocrState.remoteLoading = false;
+    ocrState.readSentence = null;
     stopOcrRemoteAudio();
     try {
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -7160,9 +7500,9 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     return chunks.filter(Boolean);
   }
 
-  async function readOcrTextTts(text, token) {
+  async function readOcrTextTts(text, token, startToken = 0) {
     const chunks = splitOcrChunks(text);
-    let cursor = 0;
+    let cursor = startToken;
     for (const chunk of chunks) {
       if (token !== ocrState.speakToken) return;
       const chunkWords = chunk.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || [];
@@ -7181,10 +7521,10 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     }
   }
 
-  async function readOcrTextFallback(text, token) {
+  async function readOcrTextFallback(text, token, startToken = 0) {
     const tokens = String(text || "").match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[.!?;:,]/g) || [];
     let failures = 0;
-    let wordIndex = -1;
+    let wordIndex = startToken - 1;
     for (const tokenText of tokens) {
       if (token !== ocrState.speakToken) return;
       if (/^[A-Za-z]/.test(tokenText)) {
@@ -7324,10 +7664,11 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     });
   }
 
-  async function readOcrTextRemote(text, token) {
-    const chunks = ocrTtsChunks(text);
-    if (!chunks.length) return false;
-    const audios = chunks.map(chunk => {
+  async function readOcrTextRemote(text, token, chunks = null) {
+    const list = Array.isArray(chunks) && chunks.length ? chunks : ocrSentenceChunks(text);
+    if (!list.length) return false;
+    const chunksToPlay = list;
+    const audios = chunksToPlay.map(chunk => {
       const audio = new Audio(ocrTtsUrl(chunk.text));
       audio.preload = "auto";
       audio.playbackRate = Math.max(0.5, Math.min(1.5, Number(ocrState.rate) || 1));
@@ -7348,12 +7689,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     for (let index = 0; index < audios.length; index += 1) {
       if (token !== ocrState.speakToken || !ocrState.speaking) return true;
       const audio = audios[index];
-      const chunk = chunks[index];
+      const chunk = chunksToPlay[index];
       const ready = await waitOcrRemoteAudio(audio);
       if (token !== ocrState.speakToken || !ocrState.speaking) return true;
       if (!ready) throw new Error("remote audio unavailable");
       audio.playbackRate = Math.max(0.5, Math.min(1.5, Number(ocrState.rate) || 1));
       ocrState.remoteAudio = audio;
+      if (Number.isInteger(chunk.index)) markOcrSentence(chunk.index);
       startOcrRemoteFollow(audio, chunk.start, chunk.count, token);
       await playOcrRemoteAudio(audio, token);
       clearOcrHighlight();
@@ -7363,12 +7705,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     return true;
   }
 
-  async function startOcrRead() {
+  async function startOcrRead(sentenceIndex = null) {
     if (ocrState.speaking) {
       stopOcrSpeech();
       return;
     }
-    const text = String(ocrState.text || "").trim();
+    const sentence = Number.isInteger(sentenceIndex) ? ocrState.sentences[sentenceIndex] : null;
+    const text = String(sentence ? sentence.text : ocrState.text || "").trim();
     if (!text) {
       toast("先识别或输入一些英文");
       return;
@@ -7376,21 +7719,28 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     stopOcrWordAudio();
     stopOcrRemoteAudio();
     clearOcrHighlight();
+    if (sentence) {
+      ocrState.readSentence = sentence.index;
+      markOcrSentence(sentence.index);
+    } else {
+      ocrState.readSentence = null;
+    }
     const wordCount = (text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length;
-    if (ocrState.readTokens.length !== wordCount) {
-      ocrState.words = ocrParseWords(text);
+    if (ocrState.readTokens.length !== ((ocrState.text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length)) {
+      ocrState.words = ocrParseWords(ocrState.text);
       renderOcrWords();
     }
     const token = ++ocrState.speakToken;
     ocrState.speaking = true;
     setOcrReadUI();
+    const startToken = sentence ? sentence.start : 0;
     const voices = ocrEnglishVoices();
     if (voices.length) {
-      await readOcrTextTts(text, token);
+      await readOcrTextTts(text, token, startToken);
     } else {
       let remoteOk = false;
       try {
-        remoteOk = await readOcrTextRemote(text, token);
+        remoteOk = await readOcrTextRemote(text, token, sentence ? [sentence] : null);
       } catch (error) {
         if (token !== ocrState.speakToken) return;
         if (error && error.name === "NotAllowedError") {
@@ -7409,12 +7759,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         const note = $("#ocr-voice-note");
         if (note) note.textContent = "在线语音暂时不可用，已改用逐词发音（需联网）。";
         toast("在线语音不可用，改用逐词发音");
-        await readOcrTextFallback(text, token);
+        await readOcrTextFallback(text, token, startToken);
       }
     }
     if (token !== ocrState.speakToken) return;
     ocrState.speaking = false;
     ocrState.remoteLoading = false;
+    ocrState.readSentence = null;
     setOcrReadUI();
     clearOcrHighlight();
   }
@@ -7601,6 +7952,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     saveOcrSettings();
     updateOcrTokenFavorites();
     renderOcrNewWords();
+    renderOcrHistory();
     updateOcrChrome();
     renderOcrWordDetail();
     toast(wasMarked ? `已取消收藏 ${word}` : `已收藏：${word}`);
@@ -7786,6 +8138,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         return;
       }
       setOcrText(text);
+      addOcrHistory(text);
       setOcrEditor(false);
       setOcrStatus(`识别完成 · ${ocrState.words.length} 个单词`);
       setOcrPhotoBadge("已识别", "is-ready");
@@ -7907,6 +8260,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (auto) auto.checked = ocrState.autoRead;
     ocrState.words = ocrParseWords(ocrState.text);
     renderOcrAll();
+    renderOcrHistory();
     updateOcrVoiceNote();
     if (ocrState.text.trim() && ocrState.translationFor !== ocrState.text) scheduleOcrTranslation();
     ensureOcrDictionary().catch(() => {});
@@ -8599,6 +8953,10 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (action === "close-ocr-word") { closeOcrWord(); return; }
     if (action === "ocr-speak-word") { speakOcrWord(); return; }
     if (action === "ocr-mark-word") { toggleOcrNew(); return; }
+    if (action === "ocr-sentence") { toggleOcrSentence(Number(actionNode.dataset.sentenceIndex)); return; }
+    if (action === "ocr-history-open") { openOcrHistory(actionNode.dataset.historyId); return; }
+    if (action === "ocr-history-delete") { deleteOcrHistory(actionNode.dataset.historyId); return; }
+    if (action === "ocr-history-clear") { clearOcrHistory(); return; }
     if (action === "lab-map" || action === "lab-win-map") {
       closeLabWin(true);
       return;
@@ -8936,6 +9294,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   updateLabChrome();
   updateIpaChrome();
   loadOcrSettings();
+  loadOcrHistory();
+  renderOcrHistory();
   updateOcrChrome();
   updateOcrVoiceNote();
   if ("speechSynthesis" in window && typeof window.speechSynthesis.addEventListener === "function") {
