@@ -3843,12 +3843,40 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 .ocr-reading-text {
   max-height: 340px;
   overflow-y: auto;
-  white-space: pre-wrap;
   overflow-wrap: anywhere;
   color: var(--ink);
   font-size: 17px;
   line-height: 1.9;
 }
+.ocr-sentence-block {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  margin: 0 -6px;
+  padding: 5px 6px;
+  border-radius: 8px;
+  transition: background-color .14s ease;
+}
+.ocr-sentence-block + .ocr-sentence-block { margin-top: 2px; }
+.ocr-sentence-block.is-playing { background: var(--lime); }
+.ocr-sentence-play {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  margin-top: .36em;
+  padding: 0;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+.ocr-sentence-block.is-playing .ocr-sentence-play { background: var(--ink); color: var(--lime); }
+.ocr-sentence-body { flex: 1; min-width: 0; }
 .ocr-reading-text:empty { display: none; }
 .ocr-translation {
   margin-top: 10px;
@@ -3912,11 +3940,6 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 }
 .ocr-token:hover { background: var(--soft); }
 .ocr-token.is-fav { color: var(--coral); }
-.ocr-token.is-reading {
-  background: var(--lime);
-  box-shadow: 0 0 0 3px var(--lime);
-  color: var(--ink);
-}
 .ocr-token:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .ocr-editor { margin-top: 8px; }
 .ocr-textarea {
@@ -3944,18 +3967,18 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 }
 .ocr-small-btn { min-height: 30px !important; padding: 0 9px !important; font-size: 10.5px !important; }
 .ocr-save-hint { color: var(--muted); font-family: var(--mono); font-size: 9px; }
-.ocr-readbar {
+.ocr-sentence-tools {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px 12px;
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1.5px dashed var(--line);
 }
-.ocr-read-btn { min-height: 42px; padding: 0 14px; }
-.ocr-read-btn.is-playing { background: var(--blue); }
-.ocr-rate-label, .ocr-auto-label {
+.ocr-sentence-hint { color: var(--muted); font-size: 10px; line-height: 1.45; }
+.ocr-rate-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -3973,7 +3996,6 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
   font-size: 11px;
   font-weight: 800;
 }
-.ocr-auto-label input { width: 15px; height: 15px; accent-color: var(--coral); }
 .ocr-voice-note { margin: 8px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
 
 .ocr-words { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -3999,46 +4021,6 @@ body[data-view="ipa"].is-zoomed .zoom-fab { top: 38%; }
 .ocr-empty { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .ocr-new-panel { background: #fbfff0; }
 .ocr-new-words { margin-bottom: 2px; }
-.ocr-sentences-wrap {
-  margin-top: 9px;
-  padding: 9px 10px;
-  border: 2px solid var(--ink);
-  border-radius: 12px;
-  background: #fffdf7;
-}
-.ocr-sentences-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  color: var(--blue);
-  font-family: var(--mono);
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.ocr-sentences-head small { color: var(--muted); font-family: var(--body); font-size: 10px; font-weight: 500; letter-spacing: 0; text-transform: none; }
-.ocr-sentences { display: grid; gap: 4px; max-height: 190px; margin-top: 6px; overflow-y: auto; }
-.ocr-sentence {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  width: 100%;
-  padding: 5px 6px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.ocr-sentence:hover { background: var(--blue-soft); }
-.ocr-sentence.is-playing { background: var(--lime); }
-.ocr-sentence-index { flex: 0 0 auto; padding-top: 1px; color: var(--muted); font-family: var(--mono); font-size: 9px; }
-.ocr-sentence-text { flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.55; }
-.ocr-sentence-icon { flex: 0 0 auto; padding-top: 1px; color: var(--blue); font-size: 10px; }
 .ocr-history-panel { background: #fbf7ff; }
 .ocr-history-tools { display: flex; align-items: center; gap: 6px; }
 .ocr-history { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 8px; max-height: 330px; overflow-y: auto; }
@@ -4137,14 +4119,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
 }
 @media (max-width: 380px) {
   .ocr-word-actions { grid-template-columns: 1fr; }
-  .ocr-readbar { align-items: stretch; flex-direction: column; }
-  .ocr-read-btn { width: 100%; }
+  .ocr-sentence-tools { align-items: center; }
   .ocr-rate-label { justify-content: space-between; }
   .ocr-textarea { min-height: 120px; }
   .ocr-reading { min-height: 112px; padding: 10px 11px; }
   .ocr-reading-text { max-height: 300px; font-size: 16px; line-height: 1.85; }
-  .ocr-sentences { max-height: 230px; }
-  .ocr-sentence-text { font-size: 12px; }
+  .ocr-sentence-block { margin: 0 -4px; padding: 4px 4px; }
+  .ocr-sentence-play { flex-basis: 20px; width: 20px; height: 20px; font-size: 8px; }
   .ocr-history { max-height: 300px; }
 }
 
@@ -4354,7 +4335,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         <div>
           <p class="eyebrow">PHOTO READER · OCR</p>
           <h1 class="lab-title ocr-title"><span class="hl">拍下来，</span><span class="tail">读出声。</span></h1>
-          <p class="lab-lede">拍一张英文书页或练习纸，识别成一段可点的英文；朗读时逐词高亮跟读，点任意单词看发音、音标和释义，喜欢的词可以收藏。</p>
+          <p class="lab-lede">拍一张英文书页或练习纸，识别成一段可点的英文；点句子左侧听整句，整句高亮跟读，点任意单词看发音、音标和释义，喜欢的词可以收藏。</p>
           <div class="lab-stats">
             <span class="lab-stat"><b>离线</b> 识别</span>
             <span class="lab-stat"><b>倍速</b> 朗读</span>
@@ -4365,7 +4346,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
           <p class="eyebrow">HOW IT WORKS</p>
           <ol class="ocr-guide-list">
             <li><b>01</b> 拍照或从相册选图</li>
-            <li><b>02</b> 识别后逐词跟读高亮</li>
+            <li><b>02</b> 识别后点句朗读，整句高亮</li>
             <li><b>03</b> 点词听音、查义、收藏</li>
           </ol>
           <p class="ocr-guide-note">照片只在浏览器本地识别，不会上传。</p>
@@ -4405,16 +4386,12 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
 
       <section class="ocr-panel" id="ocr-text-panel" aria-labelledby="ocr-text-title">
         <div class="ocr-panel-head">
-          <div><p class="eyebrow">STEP 02 · READ</p><h2 id="ocr-text-title">识别结果，点词跟读</h2></div>
+          <div><p class="eyebrow">STEP 02 · READ</p><h2 id="ocr-text-title">识别结果，点句跟读</h2></div>
           <span class="ocr-step-badge" id="ocr-word-count">0 个词</span>
         </div>
-        <div class="ocr-reading" id="ocr-reading" role="group" aria-label="识别出的英文，点单词查看释义">
-          <p class="ocr-empty" id="ocr-reading-empty">识别后，英文会显示在这里；点任意单词查看发音、音标和释义。</p>
+        <div class="ocr-reading" id="ocr-reading" role="group" aria-label="识别出的英文，点句子左侧朗读整句，点单词查看释义">
+          <p class="ocr-empty" id="ocr-reading-empty">识别后，英文会显示在这里；点句子左侧 ▶ 听整句，点任意单词查看发音、音标和释义。</p>
           <div class="ocr-reading-text" id="ocr-reading-text"></div>
-        </div>
-        <div class="ocr-sentences-wrap" id="ocr-sentences-wrap" hidden>
-          <div class="ocr-sentences-head"><span>逐句发音</span><small>点句子单独朗读</small></div>
-          <div class="ocr-sentences" id="ocr-sentences"></div>
         </div>
         <div class="ocr-translation" id="ocr-translation" aria-live="polite">
           <div class="ocr-translation-head">
@@ -4433,10 +4410,10 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
           <button class="btn btn-ghost ocr-small-btn" type="button" data-action="ocr-clear-text">清空文字</button>
           <span class="ocr-save-hint" id="ocr-save-hint">修改会自动保存</span>
         </div>
-        <div class="ocr-readbar">
-          <button class="btn btn-primary ocr-read-btn" type="button" data-action="ocr-read" id="ocr-read">▶ 朗读全文</button>
-          <label class="ocr-rate-label">朗读速度
-            <select id="ocr-rate" aria-label="朗读速度">
+        <div class="ocr-sentence-tools">
+          <span class="ocr-sentence-hint">点每句左侧 ▶ 朗读整句，再点 ■ 停止</span>
+          <label class="ocr-rate-label">逐句速度
+            <select id="ocr-rate" aria-label="逐句朗读速度">
               <option value="0.7">0.7×</option>
               <option value="0.85">0.85×</option>
               <option value="1" selected>1.0×</option>
@@ -4444,9 +4421,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
               <option value="1.3">1.3×</option>
             </select>
           </label>
-          <label class="ocr-auto-label"><input type="checkbox" id="ocr-auto" checked> 识别后自动朗读</label>
         </div>
-        <p class="ocr-voice-note" id="ocr-voice-note">朗读优先使用设备语音；没有英文语音包时会用在线逐词朗读（需联网）。</p>
+        <p class="ocr-voice-note" id="ocr-voice-note">逐句朗读优先使用设备语音；没有英文语音包时会用在线整句语音（需联网）。</p>
       </section>
 
       <section class="ocr-panel ocr-new-panel" id="ocr-new-panel" aria-labelledby="ocr-new-title">
@@ -4735,7 +4711,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   const ocrState = {
     text: "",
     rate: 1,
-    autoRead: true,
     newWords: new Set(),
     readTokens: [],
     activeToken: -1,
@@ -6780,7 +6755,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       if (raw && typeof raw === "object") {
         if (typeof raw.text === "string") ocrState.text = raw.text.slice(0, 20000);
         if (OCR_RATES.includes(Number(raw.rate))) ocrState.rate = Number(raw.rate);
-        if (typeof raw.autoRead === "boolean") ocrState.autoRead = raw.autoRead;
         if (Array.isArray(raw.newWords)) {
           ocrState.newWords = new Set(raw.newWords
             .map(value => ocrNormalizeWord(value))
@@ -6794,10 +6768,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     } catch (error) {}
     const area = $("#ocr-text");
     const rate = $("#ocr-rate");
-    const auto = $("#ocr-auto");
     if (area) area.value = ocrState.text;
     if (rate) rate.value = String(ocrState.rate);
-    if (auto) auto.checked = ocrState.autoRead;
     ocrState.words = ocrParseWords(ocrState.text);
   }
 
@@ -6806,7 +6778,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       localStorage.setItem(OCR_KEY, JSON.stringify({
         text: ocrState.text,
         rate: ocrState.rate,
-        autoRead: ocrState.autoRead,
         newWords: Array.from(ocrState.newWords),
         translation: ocrState.translationFor === ocrState.text ? ocrState.translation : "",
         translationFor: ocrState.translationFor === ocrState.text ? ocrState.translationFor : ""
@@ -7003,8 +6974,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (wordCount) wordCount.textContent = `${ocrState.words.length} 个词`;
     const newCount = $("#ocr-new-count");
     if (newCount) newCount.textContent = `${count} 个`;
-    const read = $("#ocr-read");
-    if (read && !ocrState.speaking) read.disabled = !ocrState.text.trim();
   }
 
   function ocrSentenceChunks(text) {
@@ -7022,50 +6991,26 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     }).filter(Boolean);
   }
 
-  function renderOcrSentences() {
-    const wrap = $("#ocr-sentences-wrap");
-    const host = $("#ocr-sentences");
-    if (!wrap || !host) return;
-    const sentences = ocrState.sentences || [];
-    if (!sentences.length) {
-      wrap.hidden = true;
-      host.innerHTML = "";
-      return;
-    }
-    wrap.hidden = false;
-    host.innerHTML = sentences.map((sentence, index) => `
-      <button class="ocr-sentence${index === ocrState.activeSentence ? " is-playing" : ""}" type="button" data-action="ocr-sentence" data-sentence-index="${index}" aria-label="第 ${index + 1} 句，点按朗读">
-        <span class="ocr-sentence-index">${String(index + 1).padStart(2, "0")}</span>
-        <span class="ocr-sentence-text">${escapeHTML(sentence.text)}</span>
-        <span class="ocr-sentence-icon">${index === ocrState.activeSentence ? "■" : "▶"}</span>
-      </button>`).join("");
-  }
-
   function markOcrSentence(index) {
     ocrState.activeSentence = Number.isInteger(index) ? index : -1;
-    const rows = Array.from(document.querySelectorAll("#ocr-sentences .ocr-sentence"));
-    rows.forEach((row, i) => {
+    const blocks = Array.from(document.querySelectorAll("#ocr-reading-text .ocr-sentence-block"));
+    blocks.forEach((block, i) => {
       const active = i === ocrState.activeSentence;
-      row.classList.toggle("is-playing", active);
-      const icon = row.querySelector(".ocr-sentence-icon");
-      if (icon) icon.textContent = active ? "■" : "▶";
+      block.classList.toggle("is-playing", active);
+      const button = block.querySelector(".ocr-sentence-play");
+      if (button) {
+        button.textContent = active ? "■" : "▶";
+        button.setAttribute("aria-label", active ? `第 ${i + 1} 句，正在朗读，点按停止` : `第 ${i + 1} 句，点按朗读整句`);
+      }
     });
-    const activeRow = rows[ocrState.activeSentence];
-    const list = $("#ocr-sentences");
-    if (activeRow && list) {
-      const top = activeRow.offsetTop;
-      if (top < list.scrollTop || top + activeRow.offsetHeight > list.scrollTop + list.clientHeight) {
-        list.scrollTop = Math.max(0, top - list.clientHeight * 0.35);
+    const activeBlock = blocks[ocrState.activeSentence];
+    const host = $("#ocr-reading-text");
+    if (activeBlock && host) {
+      const top = activeBlock.offsetTop;
+      if (top < host.scrollTop || top + activeBlock.offsetHeight > host.scrollTop + host.clientHeight) {
+        host.scrollTop = Math.max(0, top - host.clientHeight * 0.35);
       }
     }
-  }
-
-  function ocrSentenceIndexForToken(index) {
-    const sentences = ocrState.sentences || [];
-    for (const sentence of sentences) {
-      if (index >= sentence.start && index < sentence.start + sentence.count) return sentence.index;
-    }
-    return -1;
   }
 
   function toggleOcrSentence(index) {
@@ -7083,22 +7028,11 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     startOcrRead(index);
   }
 
-  function renderOcrWords() {
-    const host = $("#ocr-reading-text");
-    const empty = $("#ocr-reading-empty");
-    if (!host || !empty) return;
-    const text = String(ocrState.text || "");
-    ocrState.readTokens = [];
-    if (!text.trim()) {
-      host.innerHTML = "";
-      empty.hidden = false;
-      return;
-    }
-    empty.hidden = true;
+  function ocrSentenceTokenMarkup(text, startIndex) {
     const pattern = /[A-Za-z]+(?:['’][A-Za-z]+)*/g;
     let html = "";
     let last = 0;
-    let index = 0;
+    let index = startIndex;
     let match;
     while ((match = pattern.exec(text))) {
       html += escapeHTML(text.slice(last, match.index));
@@ -7113,39 +7047,42 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       index += 1;
     }
     html += escapeHTML(text.slice(last));
-    host.innerHTML = html;
+    return html;
+  }
+
+  function renderOcrWords() {
+    const host = $("#ocr-reading-text");
+    const empty = $("#ocr-reading-empty");
+    if (!host || !empty) return;
+    const text = String(ocrState.text || "");
+    ocrState.readTokens = [];
+    const sentences = ocrSentenceChunks(text);
+    ocrState.sentences = sentences;
+    if (!sentences.length) {
+      host.innerHTML = "";
+      empty.hidden = false;
+      ocrState.activeSentence = -1;
+      return;
+    }
+    empty.hidden = true;
+    if (!ocrState.speaking) ocrState.activeSentence = -1;
+    if (ocrState.activeSentence >= sentences.length) ocrState.activeSentence = -1;
+    host.innerHTML = sentences.map((sentence, index) => {
+      const active = ocrState.speaking && index === ocrState.activeSentence;
+      return `<div class="ocr-sentence-block${active ? " is-playing" : ""}" data-sentence-index="${index}">
+        <button class="ocr-sentence-play" type="button" data-action="ocr-sentence" data-sentence-index="${index}" aria-label="${active ? `第 ${index + 1} 句，正在朗读，点按停止` : `第 ${index + 1} 句，点按朗读整句`}">${active ? "■" : "▶"}</button>
+        <span class="ocr-sentence-body">${ocrSentenceTokenMarkup(sentence.text, sentence.start)}</span>
+      </div>`;
+    }).join("");
     ocrState.readTokens = Array.from(host.querySelectorAll(".ocr-token")).map(button => ({
       el: button,
       word: button.dataset.word || ""
     }));
-    if (!ocrState.speaking) ocrState.activeSentence = -1;
-    ocrState.sentences = ocrSentenceChunks(text);
-    if (ocrState.activeSentence >= ocrState.sentences.length) ocrState.activeSentence = -1;
-    renderOcrSentences();
   }
 
   function clearOcrHighlight() {
     ocrState.activeToken = -1;
-    (ocrState.readTokens || []).forEach(token => token.el.classList.remove("is-reading"));
     markOcrSentence(-1);
-  }
-
-  function highlightOcrToken(index) {
-    if (!ocrState.speaking) return;
-    const tokens = ocrState.readTokens || [];
-    if (!tokens.length) return;
-    const target = Math.max(0, Math.min(tokens.length - 1, Number(index) || 0));
-    if (target === ocrState.activeToken) return;
-    tokens.forEach((token, i) => token.el.classList.toggle("is-reading", i === target));
-    ocrState.activeToken = target;
-    markOcrSentence(ocrSentenceIndexForToken(target));
-    const el = tokens[target].el;
-    const host = $("#ocr-reading-text");
-    if (!host || !el) return;
-    const top = el.offsetTop;
-    if (top < host.scrollTop + 8 || top + el.offsetHeight > host.scrollTop + host.clientHeight - 8) {
-      host.scrollTop = Math.max(0, top - host.clientHeight * 0.38);
-    }
   }
 
   function updateOcrTokenFavorites() {
@@ -7309,18 +7246,8 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (!note) return;
     const voices = ocrEnglishVoices();
     note.textContent = voices.length
-      ? "设备英文语音已就绪；朗读和单词发音会优先使用它。"
-      : "没有检测到设备英文语音，朗读使用在线整句语音（需联网）；译文也由在线翻译生成。";
-  }
-
-  function setOcrReadUI() {
-    const button = $("#ocr-read");
-    if (!button) return;
-    button.textContent = ocrState.speaking
-      ? (ocrState.remoteLoading ? "■ 合成语音中…" : "■ 停止朗读")
-      : "▶ 朗读全文";
-    button.classList.toggle("is-playing", ocrState.speaking);
-    button.disabled = !ocrState.speaking && !ocrState.text.trim();
+      ? "设备英文语音已就绪；点句子左侧 ▶ 听整句，单词发音会优先使用它。"
+      : "没有检测到设备英文语音，点句子左侧 ▶ 使用在线整句语音（需联网）；译文也由在线翻译生成。";
   }
 
   function stopOcrAudioOnly() {
@@ -7346,7 +7273,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     } catch (error) {}
     stopOcrAudioOnly();
     clearOcrHighlight();
-    setOcrReadUI();
   }
 
   function stopOcrWordAudio() {
@@ -7500,36 +7426,22 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     return chunks.filter(Boolean);
   }
 
-  async function readOcrTextTts(text, token, startToken = 0) {
+  async function readOcrTextTts(text, token) {
     const chunks = splitOcrChunks(text);
-    let cursor = startToken;
     for (const chunk of chunks) {
       if (token !== ocrState.speakToken) return;
-      const chunkWords = chunk.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || [];
-      if (!chunkWords.length) continue;
-      const start = cursor;
-      highlightOcrToken(start);
       await speakOcrTts(chunk, ocrState.rate, {
-        isActive: () => token === ocrState.speakToken,
-        onBoundary: charIndex => {
-          const before = (chunk.slice(0, Math.max(0, charIndex)).match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length;
-          highlightOcrToken(start + before);
-        },
-        onFallbackTick: localIndex => highlightOcrToken(start + localIndex)
+        isActive: () => token === ocrState.speakToken
       });
-      cursor += chunkWords.length;
     }
   }
 
-  async function readOcrTextFallback(text, token, startToken = 0) {
+  async function readOcrTextFallback(text, token) {
     const tokens = String(text || "").match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[.!?;:,]/g) || [];
     let failures = 0;
-    let wordIndex = startToken - 1;
     for (const tokenText of tokens) {
       if (token !== ocrState.speakToken) return;
       if (/^[A-Za-z]/.test(tokenText)) {
-        wordIndex += 1;
-        highlightOcrToken(wordIndex);
         const word = ocrNormalizeWord(tokenText);
         const source = ocrAudioMap.get(word) || ocrYoudaoUrl(word);
         const ok = await playOcrAudio(source, ocrState.rate);
@@ -7604,41 +7516,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     ocrState.remoteLoading = false;
   }
 
-  function startOcrRemoteFollow(audio, start, count, token) {
-    if (ocrState.remoteRaf) cancelAnimationFrame(ocrState.remoteRaf);
-    const tokens = ocrState.readTokens.slice(start, start + count);
-    if (!tokens.length) return;
-    const weights = tokens.map(item => Math.max(1, item.word.length));
-    const total = weights.reduce((sum, value) => sum + value, 0) || tokens.length;
-    let last = -1;
-    const tick = () => {
-      if (token !== ocrState.speakToken || !ocrState.speaking) return;
-      const duration = Number(audio.duration);
-      let index = 0;
-      if (Number.isFinite(duration) && duration > 0) {
-        const position = Math.min(duration, Math.max(0, audio.currentTime));
-        const target = (position / duration) * total;
-        let accumulated = 0;
-        for (let i = 0; i < weights.length; i += 1) {
-          accumulated += weights[i];
-          if (target <= accumulated) {
-            index = i;
-            break;
-          }
-          index = i;
-        }
-      }
-      if (index !== last) {
-        last = index;
-        highlightOcrToken(start + index);
-      }
-      if (!audio.paused && !audio.ended) {
-        ocrState.remoteRaf = requestAnimationFrame(tick);
-      }
-    };
-    ocrState.remoteRaf = requestAnimationFrame(tick);
-  }
-
   function playOcrRemoteAudio(audio, token) {
     return new Promise((resolve, reject) => {
       let done = false;
@@ -7677,7 +7554,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     });
     ocrState.remoteAudios = audios;
     ocrState.remoteLoading = true;
-    setOcrReadUI();
     const firstReady = await waitOcrRemoteAudio(audios[0]);
     if (token !== ocrState.speakToken) return true;
     if (!firstReady) {
@@ -7685,7 +7561,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       return false;
     }
     ocrState.remoteLoading = false;
-    setOcrReadUI();
     for (let index = 0; index < audios.length; index += 1) {
       if (token !== ocrState.speakToken || !ocrState.speaking) return true;
       const audio = audios[index];
@@ -7696,7 +7571,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
       audio.playbackRate = Math.max(0.5, Math.min(1.5, Number(ocrState.rate) || 1));
       ocrState.remoteAudio = audio;
       if (Number.isInteger(chunk.index)) markOcrSentence(chunk.index);
-      startOcrRemoteFollow(audio, chunk.start, chunk.count, token);
       await playOcrRemoteAudio(audio, token);
       clearOcrHighlight();
     }
@@ -7706,50 +7580,41 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
   }
 
   async function startOcrRead(sentenceIndex = null) {
+    const sentence = Number.isInteger(sentenceIndex) ? ocrState.sentences[sentenceIndex] : null;
+    if (!sentence) return;
     if (ocrState.speaking) {
       stopOcrSpeech();
       return;
     }
-    const sentence = Number.isInteger(sentenceIndex) ? ocrState.sentences[sentenceIndex] : null;
-    const text = String(sentence ? sentence.text : ocrState.text || "").trim();
-    if (!text) {
-      toast("先识别或输入一些英文");
-      return;
-    }
+    const text = String(sentence.text || "").trim();
+    if (!text) return;
     stopOcrWordAudio();
     stopOcrRemoteAudio();
     clearOcrHighlight();
-    if (sentence) {
-      ocrState.readSentence = sentence.index;
-      markOcrSentence(sentence.index);
-    } else {
-      ocrState.readSentence = null;
-    }
-    const wordCount = (text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length;
-    if (ocrState.readTokens.length !== ((ocrState.text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).length)) {
+    ocrState.readSentence = sentence.index;
+    markOcrSentence(sentence.index);
+    if (ocrState.readTokens.length !== ocrParseWords(ocrState.text).length) {
       ocrState.words = ocrParseWords(ocrState.text);
       renderOcrWords();
+      markOcrSentence(sentence.index);
     }
     const token = ++ocrState.speakToken;
     ocrState.speaking = true;
-    setOcrReadUI();
-    const startToken = sentence ? sentence.start : 0;
     const voices = ocrEnglishVoices();
     if (voices.length) {
-      await readOcrTextTts(text, token, startToken);
+      await readOcrTextTts(text, token);
     } else {
       let remoteOk = false;
       try {
-        remoteOk = await readOcrTextRemote(text, token, sentence ? [sentence] : null);
+        remoteOk = await readOcrTextRemote(text, token, [sentence]);
       } catch (error) {
         if (token !== ocrState.speakToken) return;
         if (error && error.name === "NotAllowedError") {
           ocrState.speaking = false;
           ocrState.remoteLoading = false;
-          setOcrReadUI();
           clearOcrHighlight();
           const note = $("#ocr-voice-note");
-          if (note) note.textContent = "浏览器阻止了自动播放，请点“朗读全文”开始。";
+          if (note) note.textContent = "浏览器阻止了自动播放，请点句子左侧 ▶ 开始。";
           return;
         }
         remoteOk = false;
@@ -7759,14 +7624,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         const note = $("#ocr-voice-note");
         if (note) note.textContent = "在线语音暂时不可用，已改用逐词发音（需联网）。";
         toast("在线语音不可用，改用逐词发音");
-        await readOcrTextFallback(text, token, startToken);
+        await readOcrTextFallback(text, token);
       }
     }
     if (token !== ocrState.speakToken) return;
     ocrState.speaking = false;
     ocrState.remoteLoading = false;
     ocrState.readSentence = null;
-    setOcrReadUI();
     clearOcrHighlight();
   }
 
@@ -8103,6 +7967,7 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
 
   function normalizeOcrText(text) {
     return String(text || "")
+      .replace(/[|｜]/g, "I")
       .replace(/\r\n?/g, "\n")
       .replace(/[ \t]+\n/g, "\n")
       .replace(/\n{3,}/g, "\n\n")
@@ -8155,11 +8020,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const top = Math.max(0, panel.getBoundingClientRect().top + window.scrollY - 88);
         window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
-      }
-      if (ocrState.autoRead) {
-        window.setTimeout(() => {
-          if (!ocrView.hidden && ocrState.text && !ocrState.busy) startOcrRead();
-        }, 320);
       }
     } catch (error) {
       setOcrStatus(`识别失败：${error && error.message ? error.message : "请重试"}`, true);
@@ -8256,8 +8116,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     if (area) area.value = ocrState.text;
     const rate = $("#ocr-rate");
     if (rate) rate.value = String(ocrState.rate);
-    const auto = $("#ocr-auto");
-    if (auto) auto.checked = ocrState.autoRead;
     ocrState.words = ocrParseWords(ocrState.text);
     renderOcrAll();
     renderOcrHistory();
@@ -8941,7 +8799,6 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
     }
     if (action === "ocr-run") { runOcr(); return; }
     if (action === "ocr-clear-image") { clearOcrImage(); return; }
-    if (action === "ocr-read") { startOcrRead(); return; }
     if (action === "ocr-translate") { scheduleOcrTranslation(true); return; }
     if (action === "ocr-clear-text") { clearOcrText(); return; }
     if (action === "ocr-toggle-editor") {
@@ -9152,19 +9009,13 @@ body[data-view="ocr"].is-zoomed-out .zoom-fab { top: 26%; }
             try { audio.playbackRate = rate; } catch (error) {}
           });
         } else {
+          const current = ocrState.readSentence;
           stopOcrSpeech();
           window.setTimeout(() => {
-            if (!ocrView.hidden && ocrState.text) startOcrRead();
+            if (!ocrView.hidden && Number.isInteger(current)) startOcrRead(current);
           }, 120);
         }
       }
-    });
-  }
-  const ocrAutoToggle = $("#ocr-auto");
-  if (ocrAutoToggle) {
-    ocrAutoToggle.addEventListener("change", event => {
-      ocrState.autoRead = Boolean(event.target.checked);
-      saveOcrSettings();
     });
   }
   ["ocr-camera-input", "ocr-upload-input"].forEach(id => {
