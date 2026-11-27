@@ -2,7 +2,7 @@
  * Shell is precached; word/sentence audio is cached on first play.
  * Bump VERSION whenever the shell changes.
  */
-const VERSION = "wordwave-2026-11-25-v17";
+const VERSION = "wordwave-2026-11-27-v21";
 const SHELL_CACHE = `wordwave-shell-${VERSION}`;
 const RUNTIME_CACHE = `wordwave-runtime-${VERSION}`;
 const SCOPE = self.registration.scope;
@@ -14,6 +14,8 @@ const SHELL = [
   "data.js",
   "lab.js",
   "ipa.js",
+  "account.js",
+  "account.css",
   "favicon.svg",
   "fonts/fredoka-latin.woff2",
   "icons/icon-192.png",
@@ -60,6 +62,13 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // Account/session APIs are private and dynamic: never cache or intercept.
+  if (url.pathname.startsWith("/api/")) return;
+
+  // Admin is a separate, authenticated app. Let the network/server own it so
+  // it is never mistaken for the learning-app shell.
+  if (url.pathname === "/admin" || url.pathname.startsWith("/admin/") || url.pathname === "/admin.html") return;
+
   // SPA navigation: network first, cached shell as offline fallback.
   if (request.mode === "navigate") {
     event.respondWith((async () => {
@@ -98,6 +107,24 @@ self.addEventListener("fetch", (event) => {
         return full;
       } catch (error) {
         return new Response("", { status: 504, statusText: "offline" });
+      }
+    })());
+    return;
+  }
+
+  // The account gate is security-sensitive: network first, cache only as an
+  // offline fallback, so a deploy cannot leave users on stale auth/paywall code.
+  if (url.pathname === "/account.js") {
+    event.respondWith((async () => {
+      const cache = await caches.open(RUNTIME_CACHE);
+      try {
+        const network = await fetch(request);
+        if (network.ok) cache.put(request, network.clone());
+        return network;
+      } catch {
+        return (await cache.match(request, { ignoreSearch: true })) ||
+          (await caches.match(abs("account.js"))) ||
+          new Response("", { status: 504 });
       }
     })());
     return;

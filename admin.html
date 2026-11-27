@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>WORDWAVE 管理后台</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <section class="login-view" id="login-view">
+    <div class="login-card">
+      <aside class="login-brand">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span><strong>WORDWAVE</strong><small>ADMIN CONSOLE</small></span>
+        </div>
+        <div class="login-copy">
+          <h1>把每个成员的<br>学习时间，<em>看清楚</em>。</h1>
+          <p>管理账号、确认收款、开通会员，并查看按成员隔离的学习记录。</p>
+        </div>
+        <ul class="login-points">
+          <li><b>01</b><span>账号与权限管理</span></li>
+          <li><b>02</b><span>学习时长与模块统计</span></li>
+          <li><b>03</b><span>订单确认与兑换码</span></li>
+        </ul>
+      </aside>
+      <div class="login-form-wrap">
+        <p class="kicker">RESTRICTED AREA</p>
+        <h2>管理员登录</h2>
+        <p class="sub">仅限管理员账号。普通成员请回到学习平台登录。</p>
+        <form data-form="login" novalidate>
+          <label class="field">
+            <span>用户名</span>
+            <input name="username" autocomplete="username" required maxlength="24" placeholder="管理员用户名">
+          </label>
+          <label class="field">
+            <span>密码</span>
+            <input name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="至少 8 位">
+          </label>
+          <p class="form-error" id="login-error" role="alert"></p>
+          <button class="btn btn-primary btn-block" type="submit" id="login-submit">登录管理后台</button>
+        </form>
+        <p class="login-back"><a href="/">← 返回学习平台</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="forbidden-view" id="forbidden-view" hidden>
+    <div class="forbidden-card">
+      <p class="kicker">ACCESS DENIED</p>
+      <h1>这个账号不是管理员</h1>
+      <p class="sub" id="forbidden-text">管理后台只接受管理员账号登录。请退出后换用管理员账号。</p>
+      <div class="row-actions">
+        <button class="btn btn-primary" type="button" data-action="logout-any">退出并重新登录</button>
+        <a class="btn" href="/">回到学习平台</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="admin-shell" id="admin-app" hidden>
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#/overview">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span><strong>WORDWAVE</strong><small>ADMIN CONSOLE</small></span>
+      </a>
+      <nav class="nav" aria-label="后台导航">
+        <a href="#/overview" data-nav="overview"><span class="nav-dot"></span>概览</a>
+        <a href="#/users" data-nav="users"><span class="nav-dot"></span>用户管理</a>
+        <a href="#/orders" data-nav="orders"><span class="nav-dot"></span>订单确认</a>
+        <a href="#/redeem" data-nav="redeem"><span class="nav-dot"></span>兑换码</a>
+        <a href="#/audit" data-nav="audit"><span class="nav-dot"></span>审计日志</a>
+      </nav>
+      <div class="side-foot">
+        <div class="side-user">
+          <span class="avatar" id="side-avatar">A</span>
+          <span><strong id="side-name">管理员</strong><small id="side-meta">admin</small></span>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" data-action="logout">退出登录</button>
+      </div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-btn" type="button" data-action="toggle-nav" aria-label="打开导航">☰</button>
+        <div class="topbar-title" id="topbar-title">概览</div>
+        <div class="topbar-actions">
+          <button class="btn btn-sm" type="button" data-action="refresh">刷新</button>
+          <a class="btn btn-sm" href="/" target="_blank" rel="noopener">学习平台 ↗</a>
+        </div>
+      </header>
+      <main class="view-root" id="view-root" aria-live="polite"></main>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

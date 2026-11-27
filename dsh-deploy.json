@@ -1,17 +1,45 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-25-pwa.9",
-  "description": "五年级自然拼读 + WORD LAB 学单词 + 48 音标（每个 5 个例词）+ 拍照 OCR 读英文（整句跟读高亮、逐句发音、识别历史、点词收藏、在线整句朗读与译文），手机端纯静态站点",
+  "version": "2026-11-27-accounts.1",
+  "description": "五年级自然拼读 + WORD LAB + 48 音标 + 拍照 OCR，带 Node 账号系统、会员付费、管理员后台和按成员隔离的学习时长统计",
   "entrypoint": "index.html",
   "server": {
     "cwd": ".",
-    "command": "python3 -m http.server ${PORT} --bind 0.0.0.0",
-    "defaultPort": 8765,
-    "alternativeCommand": "py -3 -m http.server ${PORT} --bind 0.0.0.0",
+    "command": "node server/index.js",
+    "defaultPort": 8787,
     "requires": [
-      "python3"
+      "node>=22.5"
     ],
-    "build": "none"
+    "build": "none",
+    "dependencies": "none",
+    "envFile": ".env.example",
+    "dataDir": "data",
+    "database": "data/wordwave.db",
+    "healthcheck": "/api/health",
+    "adminPath": "/admin",
+    "seedCommand": "npm run create-admin -- --username admin --password '<至少8位密码>'"
+  },
+  "accounts": {
+    "enabled": true,
+    "registration": "open",
+    "pricing": {
+      "monthly": {
+        "priceCents": 500,
+        "periodDays": 30,
+        "label": "月卡 ¥5 / 30 天"
+      },
+      "lifetime": {
+        "priceCents": 3900,
+        "label": "买断 ¥39 / 永久"
+      }
+    },
+    "paymentModes": [
+      "manual",
+      "mock"
+    ],
+    "defaultPaymentMode": "manual",
+    "sessionCookie": "HttpOnly; SameSite=Lax",
+    "csrf": "x-csrf-token for non-GET except login/register"
   },
   "counts": {
     "phonicsGroups": 42,
@@ -34,6 +62,14 @@
   },
   "checks": [
     "test -f index.html",
+    "test -f account.js",
+    "test -f account.css",
+    "test -f admin.html",
+    "test -f admin.js",
+    "test -f admin.css",
+    "test -f server/index.js",
+    "test -f package.json",
+    "test -f .env.example",
     "test -f data.js",
     "test -f ipa.js",
     "test -f lab.js",
@@ -42,22 +78,21 @@
     "find audio/words -type f | wc -l  # 840",
     "find audio/lab/sentences -type f | wc -l  # 80",
     "find audio/sentences -type f | wc -l  # 840",
-    "curl -fsS http://127.0.0.1:8765/ >/dev/null",
-    "curl -fsS http://127.0.0.1:8765/manifest.json >/dev/null",
-    "curl -fsS http://127.0.0.1:8765/audio/words/unhappy.mp3 -o /dev/null",
-    "curl -fsS http://127.0.0.1:8765/audio/lab/sentences/unhappy.mp3 -o /dev/null",
-    "curl -fsS http://127.0.0.1:8765/audio/sentences/unhappy.mp3 -o /dev/null",
+    "curl -fsS http://127.0.0.1:8787/api/health >/dev/null",
+    "curl -fsS http://127.0.0.1:8787/ >/dev/null",
+    "curl -fsS http://127.0.0.1:8787/admin >/dev/null",
+    "curl -fsS http://127.0.0.1:8787/manifest.json >/dev/null",
+    "curl -fsS http://127.0.0.1:8787/audio/words/unhappy.mp3 -o /dev/null",
+    "curl -fsS http://127.0.0.1:8787/audio/lab/sentences/unhappy.mp3 -o /dev/null",
+    "curl -fsS http://127.0.0.1:8787/audio/sentences/unhappy.mp3 -o /dev/null",
     "find audio/ipa -maxdepth 1 -type f | wc -l  # 48",
     "find audio/ipa/words -type f | wc -l  # 163",
-    "curl -fsS http://127.0.0.1:8765/audio/ipa/ae.mp3 -o /dev/null",
-    "curl -fsS http://127.0.0.1:8765/audio/ipa/words/fish.mp3 -o /dev/null",
     "test -f ocr-dict.json",
     "test -f ocr-forms.json",
     "test -f vendor/tesseract/tesseract.min.js",
-    "test -f vendor/tesseract/worker.min.js",
-    "test -f vendor/tesseract/tesseract-core-simd-lstm.wasm.js",
     "test -f vendor/tesseract/lang/eng.traineddata.gz",
-    "find vendor/tesseract -type f | wc -l  # 6"
+    "find vendor/tesseract -type f | wc -l  # 6",
+    "npm test"
   ],
   "storageKeys": [
     "wordwave.progress.v1",
@@ -68,12 +103,25 @@
     "wordwave.ocr.v1",
     "wordwave.ocr.history.v1"
   ],
+  "storageNamespacing": {
+    "mode": "per-user localStorage prefix",
+    "prefix": "ww.u<userId>.",
+    "deviceLevelKeys": [
+      "wordwave.zoom.v1"
+    ],
+    "accountModule": "account.js"
+  },
   "doNotModify": [
     "data.js",
     "lab.js",
     "ipa.js",
     "audio/",
-    "index.html",
+    "account.js",
+    "account.css",
+    "admin.html",
+    "admin.js",
+    "admin.css",
+    "server/",
     "ocr-dict.json",
     "ocr-forms.json",
     "vendor/"
@@ -83,15 +131,19 @@
     "work/",
     "shots/",
     "reviews/",
-    "node_modules/"
+    "node_modules/",
+    "data/",
+    ".env",
+    "*.log"
   ],
   "notes": [
-    "纯静态站点，无后端、无数据库、无 npm 构建",
-    "手机需与服务器同一 Wi-Fi，用局域网 IP 访问",
-    "不要占用或替换 DSH Web GUI 端口",
-    "qr-lan.png 是旧机器地址，换机后请重新生成",
-    "没有登录保护，不要直接暴露到公网",
-    "PWA 安装需要 HTTPS；局域网 HTTP 只能浏览"
+    "必须用 Node >= 22.5 启动，纯静态托管没有登录、付费和后台",
+    "正式环境 PAYMENT_MODE=manual；mock 仅用于本地测试",
+    "首次启动前用 npm run create-admin 创建管理员，或配置 ADMIN_PASSWORD",
+    "data/ 含数据库、备份和初始密码文件，不能提交或公开",
+    "PWA 安装需要 HTTPS；局域网 HTTP 只能浏览",
+    "静态资源本身不能绝对防抓取，账号层保护的是 API 和数据隔离，详见 README 的安全边界",
+    "不要占用或替换 DSH Web GUI 端口"
   ],
   "pwa": {
     "manifest": "manifest.json",
@@ -99,6 +151,11 @@
     "offlineShell": true,
     "runtimeAudioCache": true,
     "installRequiresHttps": true,
-    "icons": "icons/"
+    "icons": "icons/",
+    "bypassCache": [
+      "/api/",
+      "/admin",
+      "/admin.html"
+    ]
   }
 }

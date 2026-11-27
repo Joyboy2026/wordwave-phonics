@@ -1,0 +1,18 @@
+{
+  "name": "wordwave-phonics",
+  "version": "2026-11-27-accounts.1",
+  "private": true,
+  "description": "WORDWAVE 单词声波站：自然拼读 + WORD LAB + 音标室 + 拍照读英文，带账号、订阅与学习统计",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test test/*.test.js",
+    "create-admin": "node server/cli.js create-admin",
+    "reset-password": "node server/cli.js reset-password",
+    "backup": "node server/cli.js backup"
+  }
+}
