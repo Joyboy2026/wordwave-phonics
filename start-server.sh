@@ -19,6 +19,6 @@ if [ -n "${LAN_IP}" ]; then
   echo "手机同 Wi-Fi：http://${LAN_IP}:${PORT}/?static=1"
 fi
 echo "静态模式不登录、不收费、不云同步，学习记录只存本机。"
-echo "完整账号 / 付费 / 管理后台：npm start（默认 8787）"
+echo "完整账号 / 付费 / 管理后台：npm start（默认 8788）"
 echo "按 Ctrl+C 停止。安装到手机主屏幕需要 HTTPS。"
 exec python3 -m http.server "${PORT}" --bind 0.0.0.0

@@ -51,7 +51,7 @@ export function createConfig(overrides = {}) {
     dataDir,
     dbFile: path.resolve(overrides.dbFile ?? path.join(dataDir, "wordwave.db")),
     host: overrides.host ?? process.env.HOST ?? "0.0.0.0",
-    port: asInt(overrides.port ?? process.env.PORT, 8787),
+    port: asInt(overrides.port ?? process.env.PORT, 8788),
     sessionDays: Math.max(1, asInt(overrides.sessionDays ?? process.env.SESSION_DAYS, 30)),
     cookieName: "ww_session",
     cookieSecure: asBool(overrides.cookieSecure ?? process.env.COOKIE_SECURE, false),

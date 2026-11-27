@@ -81,8 +81,8 @@ npm start
 
 打开：
 
-- 学习端：<http://127.0.0.1:8787/>
-- 管理后台：<http://127.0.0.1:8787/admin>
+- 学习端：<http://127.0.0.1:8788/>
+- 管理后台：<http://127.0.0.1:8788/admin>
 
 首次启动时，如果数据库里还没有管理员，服务端也会按 `.env` 的 `ADMIN_USERNAME` / `ADMIN_PASSWORD` 创建；没填密码则随机生成并写入 `data/initial-admin.txt`（权限 0600），请登录后立即改密码并删除该文件。
 
@@ -108,7 +108,7 @@ npm run backup            # 备份到 data/backups/wordwave-<时间>.db
 | 变量 | 默认值 | 说明 |
 | --- | --- | --- |
 | `HOST` | `0.0.0.0` | 监听地址 |
-| `PORT` | `8787` | 端口 |
+| `PORT` | `8788` | 端口 |
 | `DATA_DIR` | `data` | SQLite 数据库、备份、初始密码文件目录 |
 | `APP_TIMEZONE` | `Asia/Shanghai` | 学习统计的自然日时区 |
 | `STUDY_DAILY_CAP_MINUTES` | `720` | 每人每天最多计入的学习分钟数 |
@@ -169,7 +169,7 @@ npm run backup            # 备份到 data/backups/wordwave-<时间>.db
 - Android Chrome：打开 HTTPS 地址 → 菜单 → “安装应用”/“添加到主屏幕”。
 - iPhone Safari：打开 HTTPS 地址 → 分享 → “添加到主屏幕”。
 - 首次打开需联网；加载过的页面、UI 音频会进入缓存，之后断网也能打开；单词音频、频道页例句音频、音标例词、WORD LAB 例句音频和拍照识字引擎 / 词库在第一次使用后缓存。
-- **安装只支持 HTTPS**（或本机 `localhost`）。局域网 `http://IP:8787` 只能浏览，不能注册 Service Worker / 安装。
+- **安装只支持 HTTPS**（或本机 `localhost`）。局域网 `http://IP:8788` 只能浏览，不能注册 Service Worker / 安装。
 - Service Worker 会跳过 `/api/` 和 `/admin`，避免把登录态或后台页面缓存给下一个用户。
 
 ---
@@ -269,7 +269,7 @@ npm run backup            # 备份到 data/backups/wordwave-<时间>.db
 
 ## 常见问题
 
-**端口被占用？** 改 `.env` 的 `PORT`，或 `lsof -i :8787` 找到进程。不要直接杀未知进程。
+**端口被占用？** 改 `.env` 的 `PORT`，或 `lsof -i :8788` 找到进程。不要直接杀未知进程。
 
 **忘记管理员密码？** `npm run reset-password -- --username admin --password '新密码'`，会同时撤销该账号全部会话。
 

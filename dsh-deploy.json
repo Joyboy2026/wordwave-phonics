@@ -1,6 +1,6 @@
 {
   "app": "WORDWAVE 单词声波站",
-  "version": "2026-11-27-static-demo.1",
+  "version": "2026-11-27-static-demo.2",
   "mode": "github-pages-static",
   "description": "五年级自然拼读 + WORD LAB + 48 音标 + 拍照 OCR；GitHub Pages 静态演示，账号/付费/后台代码完整保留，改用 Node 模式即可启用",
   "entrypoint": "index.html",
@@ -19,7 +19,7 @@
     "description": "Node 完整模式：账号、会员付费、管理后台、学习时长统计、按成员隔离和云同步",
     "command": "node server/index.js",
     "npmScript": "npm start",
-    "defaultPort": 8787,
+    "defaultPort": 8788,
     "requires": [
       "node>=22.5"
     ],

@@ -57,7 +57,7 @@ sudo -u wordwave chmod 600 .env
 
 ```dotenv
 HOST=127.0.0.1
-PORT=8787
+PORT=8788
 DATA_DIR=data
 APP_TIMEZONE=Asia/Shanghai
 STUDY_DAILY_CAP_MINUTES=720
@@ -70,7 +70,7 @@ TRUST_PROXY=true
 ```
 
 - 前面有 Nginx / Caddy 时，`HOST=127.0.0.1`，只让本机反代访问。
-- 直接对外暴露 8787 时，`HOST=0.0.0.0`，并配置防火墙。
+- 直接对外暴露 8788 时，`HOST=0.0.0.0`，并配置防火墙。
 - `PAYMENT_MODE` 正式环境必须是 `manual`；`mock` 只用于本地测试。
 - `COOKIE_SECURE=true` 需要 HTTPS；本地 HTTP 调试设 `false`。
 - `TRUST_PROXY=true` 只在你确实有反向代理时开启，否则客户端可伪造 IP。
@@ -157,7 +157,7 @@ server {
     client_max_body_size 2m;
 
     location / {
-        proxy_pass http://127.0.0.1:8787;
+        proxy_pass http://127.0.0.1:8788;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -187,7 +187,7 @@ sudo systemctl restart wordwave
 
 ```caddyfile
 learn.example.com {
-    reverse_proxy 127.0.0.1:8787
+    reverse_proxy 127.0.0.1:8788
     request_body {
         max_size 2MB
     }
@@ -201,10 +201,10 @@ Caddy 自动申请证书；同样设置 `COOKIE_SECURE=true`、`TRUST_PROXY=true
 只建议内网 / 临时测试：
 
 ```bash
-HOST=0.0.0.0 PORT=8787 npm start
+HOST=0.0.0.0 PORT=8788 npm start
 ```
 
-然后 `http://服务器IP:8787/`。此时 `COOKIE_SECURE=false`，且浏览器不会允许 PWA 安装（非 HTTPS）。
+然后 `http://服务器IP:8788/`。此时 `COOKIE_SECURE=false`，且浏览器不会允许 PWA 安装（非 HTTPS）。
 
 ---
 
@@ -217,7 +217,7 @@ sudo ufw allow 443/tcp
 sudo ufw enable
 ```
 
-如果 Node 直接对外，再加 `8787/tcp`。用 Nginx 反代时不要暴露 8787。
+如果 Node 直接对外，再加 `8788/tcp`。用 Nginx 反代时不要暴露 8788。
 
 云服务器还要在安全组放行 80/443（以及 SSH）。
 
