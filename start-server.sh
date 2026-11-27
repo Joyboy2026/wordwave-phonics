@@ -2,33 +2,23 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-if ! command -v node >/dev/null 2>&1; then
-  echo "需要 Node.js >= 22.5。请先安装 Node，再运行本脚本。" >&2
-  exit 1
-fi
-
-if ! node -e 'const [a,b]=process.versions.node.split(".").map(Number); if (a < 22 || (a === 22 && b < 5)) process.exit(1)' >/dev/null 2>&1; then
-  echo "当前 Node 版本：$(node -v)，需要 >= 22.5（内置 node:sqlite）。" >&2
-  exit 1
-fi
-
-# 可选：./start-server.sh 8790 覆盖 .env 里的 PORT
-if [ "${1:-}" != "" ]; then
-  export PORT="$1"
-fi
-PORT_DISPLAY="${PORT:-$(node --input-type=module -e 'import("./server/config.js").then((m) => console.log(m.createConfig().port))' 2>/dev/null || echo 8787)}"
-
+PORT="${1:-8765}"
 LAN_IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
 if [ -z "${LAN_IP}" ] && command -v ipconfig >/dev/null 2>&1; then
   LAN_IP="$(ipconfig getifaddr en0 2>/dev/null || true)"
 fi
 
-echo "WORDWAVE 单词声波站"
-echo "学习端：http://127.0.0.1:${PORT_DISPLAY}/"
-echo "管理后台：http://127.0.0.1:${PORT_DISPLAY}/admin"
-if [ -n "${LAN_IP}" ]; then
-  echo "手机同 Wi-Fi：http://${LAN_IP}:${PORT_DISPLAY}/"
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "需要 Python 3 做静态预览。完整账号模式请改用：npm start" >&2
+  exit 1
 fi
-echo "首次使用请先创建管理员：npm run create-admin -- --username admin --password '至少8位密码'"
+
+echo "WORDWAVE 单词声波站 · 静态预览"
+echo "本机：http://127.0.0.1:${PORT}/?static=1"
+if [ -n "${LAN_IP}" ]; then
+  echo "手机同 Wi-Fi：http://${LAN_IP}:${PORT}/?static=1"
+fi
+echo "静态模式不登录、不收费、不云同步，学习记录只存本机。"
+echo "完整账号 / 付费 / 管理后台：npm start（默认 8787）"
 echo "按 Ctrl+C 停止。安装到手机主屏幕需要 HTTPS。"
-exec node server/index.js
+exec python3 -m http.server "${PORT}" --bind 0.0.0.0

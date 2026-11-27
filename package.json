@@ -1,6 +1,6 @@
 {
   "name": "wordwave-phonics",
-  "version": "2026-11-27-accounts.1",
+  "version": "2026-11-27-static-demo.1",
   "private": true,
   "description": "WORDWAVE 单词声波站：自然拼读 + WORD LAB + 音标室 + 拍照读英文，带账号、订阅与学习统计",
   "type": "module",

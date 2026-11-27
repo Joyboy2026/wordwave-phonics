@@ -1,12 +1,28 @@
 # 部署与上线
 
-本项目已经不是纯静态站点：学习页、`/admin` 和 `/api` 都由同一个 Node 进程提供。请部署到能运行 **Node.js >= 22.5** 的 Linux / macOS / Windows 机器。
+项目支持两种部署方式，先选一种：
 
-> 只想看看页面？可以用 `python3 -m http.server` 打开静态学习页，但**没有登录、付费和统计**，不要用于正式收费。
+| 方式 | 适合 | 账号 / 付费 / 后台 | 学习记录 |
+| --- | --- | --- | --- |
+| GitHub Pages 静态演示 | 展示、试用、无服务器 | 不启用（代码保留） | 只存当前浏览器 |
+| Node 完整模式 | 正式运营、收费 | 启用 | 按成员隔离并云同步 |
+
+当前线上 <https://joyboy2026.github.io/wordwave-phonics/> 是 **GitHub Pages 静态演示**：打开即学，不登录、不收费、不云同步；右下角会显示“静态演示”提示。需要账号、会员、`/admin` 和学习时长统计时，按本文部署 Node 完整模式。
+
+静态模式本地预览：
+
+```bash
+./start-server.sh
+# http://127.0.0.1:8765/?static=1
+```
+
+> 静态托管不能运行 Node/SQLite API。不要在 GitHub Pages 上收真实付款；`server/`、`account.js`、`admin.*` 代码都保留，执行 `npm start` 即可启用完整模式。
 
 ---
 
-## 1. 最低配置
+## Node 完整模式
+
+### 1. 最低配置
 
 - 1 核 CPU / 512MB 内存 / 1GB 磁盘（音频和 OCR 资源约 30MB，加上数据库和备份）。
 - Node.js 22.5+（推荐 22 LTS 或 24）。
@@ -22,7 +38,7 @@ node -v
 
 ---
 
-## 2. 上传与初始化
+### 2. 上传与初始化
 
 假设部署到 `/opt/wordwave`，运行用户为 `wordwave`：
 
@@ -80,7 +96,7 @@ sudo -u wordwave npm start
 
 ---
 
-## 3. 用 systemd 常驻
+### 3. 用 systemd 常驻
 
 `/etc/systemd/system/wordwave.service`：
 
@@ -127,9 +143,9 @@ sudo journalctl -u wordwave -f
 
 ---
 
-## 4. HTTPS 与反向代理
+### 4. HTTPS 与反向代理
 
-### 方案 A：Nginx + Let's Encrypt（推荐）
+#### 方案 A：Nginx + Let's Encrypt（推荐）
 
 安装 Nginx 和 certbot 后，先建 HTTP 配置：
 
@@ -167,7 +183,7 @@ certbot 会自动加 443 和跳转。确认 `.env` 里 `COOKIE_SECURE=true`、`T
 sudo systemctl restart wordwave
 ```
 
-### 方案 B：Caddy
+#### 方案 B：Caddy
 
 ```caddyfile
 learn.example.com {
@@ -180,7 +196,7 @@ learn.example.com {
 
 Caddy 自动申请证书；同样设置 `COOKIE_SECURE=true`、`TRUST_PROXY=true`。
 
-### 方案 C：直接暴露端口
+#### 方案 C：直接暴露端口
 
 只建议内网 / 临时测试：
 
@@ -192,7 +208,7 @@ HOST=0.0.0.0 PORT=8787 npm start
 
 ---
 
-## 5. 防火墙
+### 5. 防火墙
 
 ```bash
 sudo ufw allow 22/tcp
@@ -207,9 +223,9 @@ sudo ufw enable
 
 ---
 
-## 6. 备份与恢复
+### 6. 备份与恢复
 
-### 备份
+#### 备份
 
 ```bash
 cd /opt/wordwave
@@ -227,7 +243,7 @@ sudo -u wordwave node server/cli.js backup
 
 建议再用 `rclone` / `rsync` 把 `data/backups/` 同步到另一台机器或对象存储；不要把备份提交到 Git。
 
-### 恢复
+#### 恢复
 
 ```bash
 sudo systemctl stop wordwave
@@ -240,7 +256,7 @@ sudo systemctl start wordwave
 
 如果备份文件名不同，按实际路径替换。恢复后登录后台抽查用户、订单和学习统计。
 
-### 迁移到新机器
+#### 迁移到新机器
 
 1. 旧机执行备份。
 2. 新机部署代码、`.env`，停服务。
@@ -249,7 +265,7 @@ sudo systemctl start wordwave
 
 ---
 
-## 7. 升级
+### 7. 升级
 
 ```bash
 cd /opt/wordwave
@@ -270,7 +286,7 @@ npm test
 
 ---
 
-## 8. 支付上线检查
+### 8. 支付上线检查
 
 1. `.env` 中 `PAYMENT_MODE=manual`。
 2. 在付费墙文案或群公告里放你的微信 / 支付宝收款方式。
@@ -287,7 +303,7 @@ npm test
 
 ---
 
-## 9. 安全清单
+### 9. 安全清单
 
 - [ ] 已改默认管理员密码，删除 `data/initial-admin.txt`。
 - [ ] `.env` 权限 600，未提交 Git。
@@ -302,18 +318,18 @@ npm test
 
 ---
 
-## 10. 已知边界
+### 10. 已知边界
 
 - **静态内容不能做到绝对防抓取。** 登录墙和会员校验保护的是 API 与界面；`index.html`、词库、音频仍会被浏览器下载。需要强版权保护时，应改为服务端渲染 / 加密资源。
 - **PWA 离线宽限 72 小时。** 已付费设备断网可继续用缓存会员状态；这是离线体验的取舍。
 - **没有邮件 / 短信找回密码。** 由管理员重置。
-- **GitHub Pages 不能跑这套后端。** 静态托管只能预览学习页。
+- **GitHub Pages 不能跑这套后端。** 它只能提供静态演示；账号、支付、后台和统计需要 Node 模式。
 - **单机 SQLite。** 适合家庭 / 小班 / 单校规模；多机横向扩展需要换 PostgreSQL 或做共享存储，当前不包含。
 - **时区。** 学习日按 `APP_TIMEZONE` 计算，默认中国时区；改时区不会重算历史数据。
 
 ---
 
-## 11. 从旧静态版迁移
+### 11. 从旧静态版迁移
 
 旧版的进度只存在每个浏览器自己的 localStorage（`wordwave.progress.v1` 等），没有账号，也没有服务端数据。升级后：
 

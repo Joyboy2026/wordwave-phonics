@@ -646,6 +646,57 @@ body.ww-locked .skip-link {
   display: none;
 }
 
+.ww-static-pill {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(380px, calc(100vw - 28px));
+  padding: 9px 13px;
+  border: 1.5px solid #151512;
+  border-radius: 999px;
+  background: #151512;
+  color: #f7f2e8;
+  font: 600 12px/1.4 "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  box-shadow: 0 4px 0 rgba(21, 21, 18, 0.2);
+}
+
+.ww-static-pill a {
+  color: #d9ff6a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+.ww-static-pill-close {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f7f2e8;
+  font: 700 14px/1 sans-serif;
+  cursor: pointer;
+}
+
+.ww-static-pill-close:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+@media (max-width: 760px) {
+  .ww-static-pill {
+    left: auto;
+    right: 10px;
+    bottom: 10px;
+    max-width: calc(100vw - 20px);
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 760px) {
   .ww-gate {
     padding: 10px;

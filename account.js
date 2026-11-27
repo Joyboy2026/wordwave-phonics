@@ -20,6 +20,7 @@
   ];
   const ORDER_STATUS = { pending: "待支付", paid: "已支付", cancelled: "已取消", refunded: "已退款" };
   const STATIC_PAGE = /\.github\.io$/i.test(location.hostname);
+  const STATIC_MODE = STATIC_PAGE || new URLSearchParams(location.search).has("static");
   const DEPLOY_DOC = "https://github.com/Joyboy2026/wordwave-phonics/blob/main/DEPLOY.md";
   const OFFLINE_GRACE_MS = 72 * 60 * 60 * 1000;
   const HEARTBEAT_MS = 45000;
@@ -83,7 +84,7 @@
     }
   }
 
-  const cached = readCache();
+  const cached = STATIC_MODE ? null : readCache();
   if (cached) {
     state.user = cached.user;
     state.entitlement = cached.entitlement || null;
@@ -315,7 +316,6 @@
     else if (state.mode === "register") renderRegister();
     else if (state.mode === "paywall") renderPaywall();
     else if (state.mode === "account") renderAccount();
-    else if (state.mode === "static") renderStaticHost();
     else if (state.mode === "error") renderError();
     else renderLoading();
   }
@@ -329,10 +329,8 @@
   // ---------- boot ----------
 
   async function boot() {
-    if (STATIC_PAGE) {
-      state.mode = "static";
-      state.error = "";
-      openGate("static");
+    if (STATIC_MODE) {
+      enterStaticMode();
       return;
     }
     state.mode = "loading";
@@ -498,15 +496,23 @@
     `);
   }
 
-  function renderStaticHost() {
-    setMain(`
-      <p class="ww-kicker">STATIC HOST</p>
-      <h2 id="ww-title">需要 Node 后端</h2>
-      <p class="ww-sub">当前是 GitHub Pages 静态托管，只能提供页面文件，无法运行账号、支付和学习记录 API。</p>
-      <p class="ww-sub">请按部署说明把项目放到支持 <strong>Node.js >= 22.5</strong> 的服务器上，再访问该服务器地址。</p>
-      <a class="ww-btn ww-btn-primary ww-btn-block" href="${DEPLOY_DOC}" target="_blank" rel="noopener">查看部署说明</a>
-      <p class="ww-foot"><span>GitHub Pages 仅用于展示代码</span><span>v1</span></p>
-    `);
+  function enterStaticMode() {
+    state.mode = "static";
+    state.appOpen = true;
+    document.body.classList.remove("ww-locked");
+    gate.hidden = true;
+    fab.hidden = true;
+    if (document.getElementById("ww-static-pill")) return;
+    const pill = document.createElement("div");
+    pill.id = "ww-static-pill";
+    pill.className = "ww-static-pill";
+    pill.innerHTML =
+      '<span>静态演示 · 学习记录仅存本机</span>' +
+      '<a href="' + DEPLOY_DOC + '" target="_blank" rel="noopener">账号部署</a>' +
+      '<button type="button" class="ww-static-pill-close" aria-label="关闭静态演示提示">×</button>';
+    const close = pill.querySelector(".ww-static-pill-close");
+    if (close) close.addEventListener("click", () => pill.remove());
+    document.body.appendChild(pill);
   }
 
   function renderError() {
