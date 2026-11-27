@@ -19,6 +19,8 @@
     "wordwave.ocr.history.v1"
   ];
   const ORDER_STATUS = { pending: "待支付", paid: "已支付", cancelled: "已取消", refunded: "已退款" };
+  const STATIC_PAGE = /\.github\.io$/i.test(location.hostname);
+  const DEPLOY_DOC = "https://github.com/Joyboy2026/wordwave-phonics/blob/main/DEPLOY.md";
   const OFFLINE_GRACE_MS = 72 * 60 * 60 * 1000;
   const HEARTBEAT_MS = 45000;
   const SYNC_DEBOUNCE_MS = 900;
@@ -313,6 +315,7 @@
     else if (state.mode === "register") renderRegister();
     else if (state.mode === "paywall") renderPaywall();
     else if (state.mode === "account") renderAccount();
+    else if (state.mode === "static") renderStaticHost();
     else if (state.mode === "error") renderError();
     else renderLoading();
   }
@@ -326,6 +329,12 @@
   // ---------- boot ----------
 
   async function boot() {
+    if (STATIC_PAGE) {
+      state.mode = "static";
+      state.error = "";
+      openGate("static");
+      return;
+    }
     state.mode = "loading";
     state.error = "";
     openGate("loading");
@@ -486,6 +495,17 @@
       <div class="ww-spinner" aria-hidden="true"></div>
       <p class="ww-sub" style="text-align:center;">正在确认账号与会员状态，请稍候。</p>
       <div class="ww-foot"><span>学习数据按成员隔离</span><span>v1</span></div>
+    `);
+  }
+
+  function renderStaticHost() {
+    setMain(`
+      <p class="ww-kicker">STATIC HOST</p>
+      <h2 id="ww-title">需要 Node 后端</h2>
+      <p class="ww-sub">当前是 GitHub Pages 静态托管，只能提供页面文件，无法运行账号、支付和学习记录 API。</p>
+      <p class="ww-sub">请按部署说明把项目放到支持 <strong>Node.js >= 22.5</strong> 的服务器上，再访问该服务器地址。</p>
+      <a class="ww-btn ww-btn-primary ww-btn-block" href="${DEPLOY_DOC}" target="_blank" rel="noopener">查看部署说明</a>
+      <p class="ww-foot"><span>GitHub Pages 仅用于展示代码</span><span>v1</span></p>
     `);
   }
 
